@@ -2,6 +2,7 @@ pg_self_test\main.o: ../Src/main.c
 pg_self_test\main.o: ../Inc/main.h
 pg_self_test\main.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h
 pg_self_test\main.o: ../Inc/stm32l4xx_hal_conf.h
+pg_self_test\main.o: ../Inc/main.h
 pg_self_test\main.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_rcc.h
 pg_self_test\main.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_def.h
 pg_self_test\main.o: ../Drivers/CMSIS/Device/ST/STM32L4xx/Include/stm32l4xx.h
@@ -38,3 +39,12 @@ pg_self_test\main.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_spi.h
 pg_self_test\main.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_spi_ex.h
 pg_self_test\main.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart.h
 pg_self_test\main.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart_ex.h
+pg_self_test\main.o: ../Inc/LCDTest.h
+pg_self_test\main.o: ../Inc/glcd.h
+pg_self_test\main.o: ../Inc/ST7565R.h
+pg_self_test\main.o: ../Inc/glcd_devices.h
+pg_self_test\main.o: ../Inc/glcd_controllers.h
+pg_self_test\main.o: ../Inc/glcd_graphics.h
+pg_self_test\main.o: ../Inc/glcd_text_tiny.h
+pg_self_test\main.o: ../Inc/glcd_text.h
+pg_self_test\main.o: ../Inc/FlashTest.h

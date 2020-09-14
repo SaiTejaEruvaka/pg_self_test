@@ -44,15 +44,16 @@
 /* Includes ------------------------------------------------------------------*/
 
 /* USER CODE BEGIN Includes */
-
+#include "stm32l4xx_hal.h"
+#include <stdint.h>
 /* USER CODE END Includes */
 
 /* Private define ------------------------------------------------------------*/
 
 #define LCD_A0_Pin GPIO_PIN_13
 #define LCD_A0_GPIO_Port GPIOC
-#define LCD__RES_Pin GPIO_PIN_1
-#define LCD__RES_GPIO_Port GPIOA
+#define LCD_RESET_Pin GPIO_PIN_1
+#define LCD_RESET_GPIO_Port GPIOA
 #define SPI_NSS_Pin GPIO_PIN_4
 #define SPI_NSS_GPIO_Port GPIOA
 #define TRAIL_REQ_Pin GPIO_PIN_13
@@ -95,7 +96,24 @@
 /* #define USE_FULL_ASSERT    1U */
 
 /* USER CODE BEGIN Private defines */
+#define CONSOLE_USART  	(USART_TypeDef *)USART1
 
+typedef union self_test_comm
+{
+	uint8_t self_test;
+	
+	struct self_test_bits_comm_t
+	{
+		uint8_t st_flash_b:1;
+		uint8_t st_lora_b:1;
+		uint8_t st_12v_b:1;
+		uint8_t st_3v_b:1;
+		uint8_t unused:4;
+	}self_test_bits_comm;
+	
+}self_test_common_t;
+
+extern self_test_common_t self_test_common;
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

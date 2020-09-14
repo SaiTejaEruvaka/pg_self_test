@@ -41,7 +41,8 @@
 #include "stm32l4xx_hal.h"
 
 /* USER CODE BEGIN Includes */
-
+#include "LCDTest.h"
+#include "FlashTest.h"
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
@@ -61,7 +62,10 @@ SPI_HandleTypeDef hspi1;
 
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
-
+self_test_common_t self_test_common = {0};
+#ifdef PONDMOTHER
+self_test_PM_t self_test_PM = {0};
+#endif
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -71,7 +75,7 @@ static void MX_DMA_Init(void);
 static void MX_USART1_UART_Init(void);
 static void MX_USART3_UART_Init(void);
 static void MX_USART2_UART_Init(void);
-static void MX_SPI1_Init(void);
+void MX_SPI1_Init(void);
 static void MX_RTC_Init(void);
 static void MX_I2C1_Init(void);
 static void MX_ADC1_Init(void);
@@ -83,6 +87,11 @@ static void MX_LPUART1_UART_Init(void);
 /* USER CODE END PFP */
 
 /* USER CODE BEGIN 0 */
+
+//char LCD[LCD_MAX_LINES][LINE_SIZE + 1];
+
+
+
 	uint8_t recv_buffer[10];
 	uint8_t ble_buffer[100];
 	uint8_t lora_buffer[100];
@@ -109,6 +118,42 @@ HAL_StatusTypeDef i2cStatus;
 	RTC_TimeTypeDef sTime;
 	RTC_DateTypeDef sDate;
 	uint32_t val=0;
+	
+//	void LCD_Init(void)
+//{
+//		HAL_SPI_DeInit(&hspi1);
+//	  HAL_GPIO_WritePin(LCD_A0_GPIO_Port, LCD_A0_Pin, GPIO_PIN_RESET);
+//	  /*Configure GPIO pin Output Level */
+//		HAL_GPIO_WritePin(SPI_NSS_GPIO_Port, SPI_NSS_Pin, GPIO_PIN_SET);
+//		HAL_GPIO_WritePin(LCD_RESET_GPIO_Port, SPI_NSS_Pin,GPIO_PIN_RESET);
+//		MX_SPI1_Init();
+//	  HAL_Delay(10);
+//		HAL_GPIO_WritePin(SPI_NSS_GPIO_Port, SPI_NSS_Pin, GPIO_PIN_RESET);
+//		glcd_ST7565R_init();
+//		glcd_select_screen(glcd_buffer, &glcd_bbox);
+//		glcd_clear();
+//		glcd_clear_now();		
+//	  glcd_write();
+//		HAL_GPIO_WritePin(SPI_NSS_GPIO_Port, SPI_NSS_Pin, GPIO_PIN_SET);
+//}
+
+//void LCDTest(void)
+//{
+//	LCD_Init();
+//	// Draw the Eruvaka Technologies string to UI
+//	snprintf((char*)LCD[3], LINE_SIZE, "      ERUVAKA ");
+//	snprintf((char*)LCD[5], LINE_SIZE, "    TECHNOLOGIES");
+//	GLCD_CS_LOW();
+//	//glcd_clear();
+//	//glcd_clear_now();	
+//	set_tiny_font();
+//	/* Draw the strings of all the LCD buffers */
+//	glcd_tiny_draw_string(1, 3, LCD[3]);
+//	glcd_tiny_draw_string(1, 5, LCD[5]);
+//	glcd_write();
+//	GLCD_CS_HIGH();
+//	HAL_Delay(100);
+//}
 /* USER CODE END 0 */
 
 /**
@@ -180,12 +225,14 @@ int main(void)
 	ret=HAL_I2C_Master_Receive(&hi2c1,0xAA,i2c_data,sizeof(i2c_data),5000);
 	ret=HAL_I2C_Master_Receive(&hi2c1,0x9F,i2c_data,sizeof(i2c_data),5000);
 	
-	sTime.Hours=11;
-	sTime.Minutes=53;
-	sTime.Seconds=45;
-	
-	HAL_RTC_SetTime(&hrtc,&sTime,RTC_FORMAT_BIN);
+//	sTime.Hours=11;
+//	sTime.Minutes=53;
+//	sTime.Seconds=45;
+//	
+//	HAL_RTC_SetTime(&hrtc,&sTime,RTC_FORMAT_BIN);
 	val=HAL_RTCEx_BKUPRead(&hrtc,12);
+//	LCDTest();
+	FlashTest();
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -520,13 +567,13 @@ static void MX_RTC_Init(void)
 }
 
 /* SPI1 init function */
-static void MX_SPI1_Init(void)
+void MX_SPI1_Init(void)
 {
 
   /* SPI1 parameter configuration*/
   hspi1.Instance = SPI1;
   hspi1.Init.Mode = SPI_MODE_MASTER;
-  hspi1.Init.Direction = SPI_DIRECTION_2LINES;
+  hspi1.Init.Direction = SPI_DIRECTION_2LINES;//SPI_DIRECTION_2LINES;
   hspi1.Init.DataSize = SPI_DATASIZE_8BIT;
   hspi1.Init.CLKPolarity = SPI_POLARITY_LOW;
   hspi1.Init.CLKPhase = SPI_PHASE_1EDGE;
@@ -583,7 +630,7 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(GPIOC, LCD_A0_Pin|SENS_PWR_CTRL_Pin|LCD_BACKLIGHT_Pin|LORA_RST_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, LCD__RES_Pin|LORA_PWR_EN_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, LCD_RESET_Pin|LORA_PWR_EN_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(SPI_NSS_GPIO_Port, SPI_NSS_Pin, GPIO_PIN_SET);
@@ -601,8 +648,8 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : LCD__RES_Pin LORA_PWR_EN_Pin */
-  GPIO_InitStruct.Pin = LCD__RES_Pin|LORA_PWR_EN_Pin;
+  /*Configure GPIO pins : LCD_RESET_Pin LORA_PWR_EN_Pin */
+  GPIO_InitStruct.Pin = LCD_RESET_Pin|LORA_PWR_EN_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;

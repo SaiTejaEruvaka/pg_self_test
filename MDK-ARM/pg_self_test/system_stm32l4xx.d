@@ -1,4 +1,4 @@
-pg_self_test\system_stm32l4xx.o: ..//Src/system_stm32l4xx.c
+pg_self_test\system_stm32l4xx.o: ..\Src\system_stm32l4xx.c
 pg_self_test\system_stm32l4xx.o: ../Drivers/CMSIS/Device/ST/STM32L4xx/Include/stm32l4xx.h
 pg_self_test\system_stm32l4xx.o: ../Drivers/CMSIS/Device/ST/STM32L4xx/Include/stm32l431xx.h
 pg_self_test\system_stm32l4xx.o: ../Drivers/CMSIS/Include/core_cm4.h
@@ -11,6 +11,7 @@ pg_self_test\system_stm32l4xx.o: ../Drivers/CMSIS/Device/ST/STM32L4xx/Include/sy
 pg_self_test\system_stm32l4xx.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h
 pg_self_test\system_stm32l4xx.o: ../Inc/stm32l4xx_hal_conf.h
 pg_self_test\system_stm32l4xx.o: ../Inc/main.h
+pg_self_test\system_stm32l4xx.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h
 pg_self_test\system_stm32l4xx.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_rcc.h
 pg_self_test\system_stm32l4xx.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_def.h
 pg_self_test\system_stm32l4xx.o: ../Drivers/CMSIS/Device/ST/STM32L4xx/Include/stm32l4xx.h
