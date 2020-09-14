@@ -150,9 +150,9 @@ int main(void)
 	HAL_Delay(500);
 	HAL_GPIO_WritePin(GPS_PWR_EN_GPIO_Port, GPS_PWR_EN_Pin, GPIO_PIN_SET);
 	HAL_Delay(500);
-	HAL_GPIO_WritePin(GPS_RST_GPIO_Port, GPS_RST_Pin, GPIO_PIN_RESET);
-	HAL_Delay(500);
 	HAL_GPIO_WritePin(GPS_RST_GPIO_Port, GPS_RST_Pin, GPIO_PIN_SET);
+	HAL_Delay(500);
+	HAL_GPIO_WritePin(GPS_RST_GPIO_Port, GPS_RST_Pin, GPIO_PIN_RESET);
 	HAL_UART_Receive_IT(&hlpuart1,gps_buffer,sizeof(gps_buffer));
 	HAL_ADC_Start_DMA(&hadc1,(uint32_t*)adc_value,1);
 //	HAL_UART_Receive_IT(&huart1,recv_buffer,sizeof(recv_buffer));
