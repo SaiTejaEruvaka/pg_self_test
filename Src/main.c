@@ -108,6 +108,7 @@ HAL_StatusTypeDef i2cStatus;
 	
 	RTC_TimeTypeDef sTime;
 	RTC_DateTypeDef sDate;
+	uint32_t val=0;
 /* USER CODE END 0 */
 
 /**
@@ -184,6 +185,7 @@ int main(void)
 	sTime.Seconds=45;
 	
 	HAL_RTC_SetTime(&hrtc,&sTime,RTC_FORMAT_BIN);
+	val=HAL_RTCEx_BKUPRead(&hrtc,12);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -578,19 +580,33 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOD_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOC, LCD_A0_Pin|SENS_PWR_CTRL_Pin|LCD_BACKLIGHT_Pin|LORA_RST_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOA, LCD__RES_Pin|LORA_PWR_EN_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(SPI_NSS_GPIO_Port, SPI_NSS_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOB, BT_NRST_Pin|GPS_RST_Pin|GPS_PWR_EN_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOC, SENS_PWR_CTRL_Pin|LCD_BACKLIGHT_Pin|LORA_RST_Pin, GPIO_PIN_RESET);
-
-  /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(LORA_PWR_EN_GPIO_Port, LORA_PWR_EN_Pin, GPIO_PIN_RESET);
-
-  /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(SPI_Flash_CS_GPIO_Port, SPI_Flash_CS_Pin, GPIO_PIN_SET);
+
+  /*Configure GPIO pins : LCD_A0_Pin SENS_PWR_CTRL_Pin LCD_BACKLIGHT_Pin LORA_RST_Pin */
+  GPIO_InitStruct.Pin = LCD_A0_Pin|SENS_PWR_CTRL_Pin|LCD_BACKLIGHT_Pin|LORA_RST_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : LCD__RES_Pin LORA_PWR_EN_Pin */
+  GPIO_InitStruct.Pin = LCD__RES_Pin|LORA_PWR_EN_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   /*Configure GPIO pin : SPI_NSS_Pin */
   GPIO_InitStruct.Pin = SPI_NSS_Pin;
@@ -612,25 +628,11 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : SENS_PWR_CTRL_Pin LCD_BACKLIGHT_Pin LORA_RST_Pin */
-  GPIO_InitStruct.Pin = SENS_PWR_CTRL_Pin|LCD_BACKLIGHT_Pin|LORA_RST_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
-
   /*Configure GPIO pin : M4_PUSH_DB_Pin */
   GPIO_InitStruct.Pin = M4_PUSH_DB_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(M4_PUSH_DB_GPIO_Port, &GPIO_InitStruct);
-
-  /*Configure GPIO pin : LORA_PWR_EN_Pin */
-  GPIO_InitStruct.Pin = LORA_PWR_EN_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(LORA_PWR_EN_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pin : SPI_Flash_CS_Pin */
   GPIO_InitStruct.Pin = SPI_Flash_CS_Pin;

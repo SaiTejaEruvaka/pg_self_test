@@ -49,6 +49,10 @@
 
 /* Private define ------------------------------------------------------------*/
 
+#define LCD_A0_Pin GPIO_PIN_13
+#define LCD_A0_GPIO_Port GPIOC
+#define LCD__RES_Pin GPIO_PIN_1
+#define LCD__RES_GPIO_Port GPIOA
 #define SPI_NSS_Pin GPIO_PIN_4
 #define SPI_NSS_GPIO_Port GPIOA
 #define TRAIL_REQ_Pin GPIO_PIN_13
