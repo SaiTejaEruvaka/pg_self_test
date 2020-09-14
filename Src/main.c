@@ -174,6 +174,7 @@ int main(void)
 	
 	HAL_UART_Receive_IT(&huart2,lora_buffer,sizeof(lora_buffer));
 	HAL_GPIO_WritePin(SENS_PWR_CTRL_GPIO_Port,SENS_PWR_CTRL_Pin,GPIO_PIN_SET);
+	HAL_GPIO_WritePin(LCD_BACKLIGHT_GPIO_Port,LCD_BACKLIGHT_Pin,GPIO_PIN_SET);
 	i2cStatus = I2C_MCP3021_Access(MCP3021_I2C_ADDRESS,&i32Encoder_Value);
 	ret=HAL_I2C_Master_Receive(&hi2c1,0xAA,i2c_data,sizeof(i2c_data),5000);
 	ret=HAL_I2C_Master_Receive(&hi2c1,0x9F,i2c_data,sizeof(i2c_data),5000);
@@ -524,7 +525,7 @@ static void MX_SPI1_Init(void)
   hspi1.Instance = SPI1;
   hspi1.Init.Mode = SPI_MODE_MASTER;
   hspi1.Init.Direction = SPI_DIRECTION_2LINES;
-  hspi1.Init.DataSize = SPI_DATASIZE_4BIT;
+  hspi1.Init.DataSize = SPI_DATASIZE_8BIT;
   hspi1.Init.CLKPolarity = SPI_POLARITY_LOW;
   hspi1.Init.CLKPhase = SPI_PHASE_1EDGE;
   hspi1.Init.NSS = SPI_NSS_SOFT;
@@ -583,7 +584,7 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(GPIOB, BT_NRST_Pin|GPS_RST_Pin|GPS_PWR_EN_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOC, SENS_PWR_CTRL_Pin|LORA_RST_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOC, SENS_PWR_CTRL_Pin|LCD_BACKLIGHT_Pin|LORA_RST_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(LORA_PWR_EN_GPIO_Port, LORA_PWR_EN_Pin, GPIO_PIN_RESET);
@@ -611,8 +612,8 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : SENS_PWR_CTRL_Pin LORA_RST_Pin */
-  GPIO_InitStruct.Pin = SENS_PWR_CTRL_Pin|LORA_RST_Pin;
+  /*Configure GPIO pins : SENS_PWR_CTRL_Pin LCD_BACKLIGHT_Pin LORA_RST_Pin */
+  GPIO_InitStruct.Pin = SENS_PWR_CTRL_Pin|LCD_BACKLIGHT_Pin|LORA_RST_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
