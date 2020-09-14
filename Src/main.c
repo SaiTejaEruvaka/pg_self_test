@@ -105,6 +105,9 @@ static void MX_LPUART1_UART_Init(void);
 	int i32Encoder_Value;
 HAL_StatusTypeDef i2cStatus;
 	uint16_t adc_value[1];
+	
+	RTC_TimeTypeDef sTime;
+	RTC_DateTypeDef sDate;
 /* USER CODE END 0 */
 
 /**
@@ -174,6 +177,12 @@ int main(void)
 	i2cStatus = I2C_MCP3021_Access(MCP3021_I2C_ADDRESS,&i32Encoder_Value);
 	ret=HAL_I2C_Master_Receive(&hi2c1,0xAA,i2c_data,sizeof(i2c_data),5000);
 	ret=HAL_I2C_Master_Receive(&hi2c1,0x9F,i2c_data,sizeof(i2c_data),5000);
+	
+	sTime.Hours=11;
+	sTime.Minutes=53;
+	sTime.Seconds=45;
+	
+	HAL_RTC_SetTime(&hrtc,&sTime,RTC_FORMAT_BIN);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -185,6 +194,9 @@ int main(void)
 
   /* USER CODE BEGIN 3 */
 //		HAL_UART_Transmit(&huart1,(uint8_t*)"Hello\r\n",8,1000);
+		HAL_RTC_GetTime(&hrtc,&sTime,RTC_FORMAT_BIN);
+		HAL_RTC_GetDate(&hrtc,&sDate,RTC_FORMAT_BIN);
+		HAL_Delay(1000);
   }
   /* USER CODE END 3 */
 
@@ -476,8 +488,8 @@ static void MX_RTC_Init(void)
 
     /**Initialize RTC and set the Time and Date 
     */
-  sTime.Hours = 12;
-  sTime.Minutes = 0;
+  sTime.Hours = 11;
+  sTime.Minutes = 49;
   sTime.Seconds = 0;
   sTime.DayLightSaving = RTC_DAYLIGHTSAVING_NONE;
   sTime.StoreOperation = RTC_STOREOPERATION_RESET;
@@ -491,7 +503,7 @@ static void MX_RTC_Init(void)
 
   sDate.WeekDay = RTC_WEEKDAY_SATURDAY;
   sDate.Month = RTC_MONTH_SEPTEMBER;
-  sDate.Date = 12;
+  sDate.Date = 14;
   sDate.Year = 20;
 
   if (HAL_RTC_SetDate(&hrtc, &sDate, RTC_FORMAT_BIN) != HAL_OK)

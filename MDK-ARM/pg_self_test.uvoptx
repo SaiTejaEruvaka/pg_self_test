@@ -195,6 +195,11 @@
           <WinNumber>1</WinNumber>
           <ItemText>gps_buffer</ItemText>
         </Ww>
+        <Ww>
+          <count>9</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>sTime</ItemText>
+        </Ww>
       </WatchWindow1>
       <Tracepoint>
         <THDelay>0</THDelay>
