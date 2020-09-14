@@ -113,47 +113,11 @@ static void MX_LPUART1_UART_Init(void);
 	 #define MCP3021_I2C_ADDRESS 0x9E
 	int i32Encoder_Value;
 HAL_StatusTypeDef i2cStatus;
-	uint16_t adc_value[1];
-	
+	uint16_t adc_value[7];
+	float conv_adc_value[7];
 	RTC_TimeTypeDef sTime;
 	RTC_DateTypeDef sDate;
 	uint32_t val=0;
-	
-//	void LCD_Init(void)
-//{
-//		HAL_SPI_DeInit(&hspi1);
-//	  HAL_GPIO_WritePin(LCD_A0_GPIO_Port, LCD_A0_Pin, GPIO_PIN_RESET);
-//	  /*Configure GPIO pin Output Level */
-//		HAL_GPIO_WritePin(SPI_NSS_GPIO_Port, SPI_NSS_Pin, GPIO_PIN_SET);
-//		HAL_GPIO_WritePin(LCD_RESET_GPIO_Port, SPI_NSS_Pin,GPIO_PIN_RESET);
-//		MX_SPI1_Init();
-//	  HAL_Delay(10);
-//		HAL_GPIO_WritePin(SPI_NSS_GPIO_Port, SPI_NSS_Pin, GPIO_PIN_RESET);
-//		glcd_ST7565R_init();
-//		glcd_select_screen(glcd_buffer, &glcd_bbox);
-//		glcd_clear();
-//		glcd_clear_now();		
-//	  glcd_write();
-//		HAL_GPIO_WritePin(SPI_NSS_GPIO_Port, SPI_NSS_Pin, GPIO_PIN_SET);
-//}
-
-//void LCDTest(void)
-//{
-//	LCD_Init();
-//	// Draw the Eruvaka Technologies string to UI
-//	snprintf((char*)LCD[3], LINE_SIZE, "      ERUVAKA ");
-//	snprintf((char*)LCD[5], LINE_SIZE, "    TECHNOLOGIES");
-//	GLCD_CS_LOW();
-//	//glcd_clear();
-//	//glcd_clear_now();	
-//	set_tiny_font();
-//	/* Draw the strings of all the LCD buffers */
-//	glcd_tiny_draw_string(1, 3, LCD[3]);
-//	glcd_tiny_draw_string(1, 5, LCD[5]);
-//	glcd_write();
-//	GLCD_CS_HIGH();
-//	HAL_Delay(100);
-//}
 /* USER CODE END 0 */
 
 /**
@@ -203,7 +167,7 @@ int main(void)
 	HAL_Delay(500);
 	HAL_GPIO_WritePin(GPS_RST_GPIO_Port, GPS_RST_Pin, GPIO_PIN_RESET);
 	HAL_UART_Receive_IT(&hlpuart1,gps_buffer,sizeof(gps_buffer));
-	HAL_ADC_Start_DMA(&hadc1,(uint32_t*)adc_value,1);
+	HAL_ADC_Start_DMA(&hadc1,(uint32_t*)adc_value,7);
 //	HAL_UART_Receive_IT(&huart1,recv_buffer,sizeof(recv_buffer));
 	HAL_GPIO_WritePin(BT_NRST_GPIO_Port,BT_NRST_Pin,GPIO_PIN_RESET);
 	HAL_Delay(10);
@@ -354,16 +318,16 @@ static void MX_ADC1_Init(void)
   hadc1.Init.ClockPrescaler = ADC_CLOCK_ASYNC_DIV1;
   hadc1.Init.Resolution = ADC_RESOLUTION_12B;
   hadc1.Init.DataAlign = ADC_DATAALIGN_RIGHT;
-  hadc1.Init.ScanConvMode = ADC_SCAN_DISABLE;
+  hadc1.Init.ScanConvMode = ADC_SCAN_ENABLE;
   hadc1.Init.EOCSelection = ADC_EOC_SEQ_CONV;
   hadc1.Init.LowPowerAutoWait = DISABLE;
   hadc1.Init.ContinuousConvMode = ENABLE;
-  hadc1.Init.NbrOfConversion = 1;
+  hadc1.Init.NbrOfConversion = 7;
   hadc1.Init.DiscontinuousConvMode = DISABLE;
   hadc1.Init.NbrOfDiscConversion = 1;
   hadc1.Init.ExternalTrigConv = ADC_SOFTWARE_START;
   hadc1.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
-  hadc1.Init.DMAContinuousRequests = DISABLE;
+  hadc1.Init.DMAContinuousRequests = ENABLE;
   hadc1.Init.Overrun = ADC_OVR_DATA_PRESERVED;
   hadc1.Init.OversamplingMode = DISABLE;
   if (HAL_ADC_Init(&hadc1) != HAL_OK)
@@ -373,12 +337,66 @@ static void MX_ADC1_Init(void)
 
     /**Configure Regular Channel 
     */
-  sConfig.Channel = ADC_CHANNEL_5;
+  sConfig.Channel = ADC_CHANNEL_3;
   sConfig.Rank = ADC_REGULAR_RANK_1;
-  sConfig.SamplingTime = ADC_SAMPLETIME_2CYCLES_5;
+  sConfig.SamplingTime = ADC_SAMPLETIME_247CYCLES_5;
   sConfig.SingleDiff = ADC_SINGLE_ENDED;
   sConfig.OffsetNumber = ADC_OFFSET_NONE;
   sConfig.Offset = 0;
+  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
+  {
+    _Error_Handler(__FILE__, __LINE__);
+  }
+
+    /**Configure Regular Channel 
+    */
+  sConfig.Channel = ADC_CHANNEL_4;
+  sConfig.Rank = ADC_REGULAR_RANK_2;
+  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
+  {
+    _Error_Handler(__FILE__, __LINE__);
+  }
+
+    /**Configure Regular Channel 
+    */
+  sConfig.Channel = ADC_CHANNEL_5;
+  sConfig.Rank = ADC_REGULAR_RANK_3;
+  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
+  {
+    _Error_Handler(__FILE__, __LINE__);
+  }
+
+    /**Configure Regular Channel 
+    */
+  sConfig.Channel = ADC_CHANNEL_13;
+  sConfig.Rank = ADC_REGULAR_RANK_4;
+  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
+  {
+    _Error_Handler(__FILE__, __LINE__);
+  }
+
+    /**Configure Regular Channel 
+    */
+  sConfig.Channel = ADC_CHANNEL_14;
+  sConfig.Rank = ADC_REGULAR_RANK_5;
+  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
+  {
+    _Error_Handler(__FILE__, __LINE__);
+  }
+
+    /**Configure Regular Channel 
+    */
+  sConfig.Channel = ADC_CHANNEL_15;
+  sConfig.Rank = ADC_REGULAR_RANK_6;
+  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
+  {
+    _Error_Handler(__FILE__, __LINE__);
+  }
+
+    /**Configure Regular Channel 
+    */
+  sConfig.Channel = ADC_CHANNEL_16;
+  sConfig.Rank = ADC_REGULAR_RANK_7;
   if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
   {
     _Error_Handler(__FILE__, __LINE__);
@@ -573,7 +591,7 @@ void MX_SPI1_Init(void)
   /* SPI1 parameter configuration*/
   hspi1.Instance = SPI1;
   hspi1.Init.Mode = SPI_MODE_MASTER;
-  hspi1.Init.Direction = SPI_DIRECTION_2LINES;//SPI_DIRECTION_2LINES;
+  hspi1.Init.Direction = SPI_DIRECTION_2LINES;
   hspi1.Init.DataSize = SPI_DATASIZE_8BIT;
   hspi1.Init.CLKPolarity = SPI_POLARITY_LOW;
   hspi1.Init.CLKPhase = SPI_PHASE_1EDGE;
@@ -627,7 +645,8 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOD_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOC, LCD_A0_Pin|SENS_PWR_CTRL_Pin|LCD_BACKLIGHT_Pin|LORA_RST_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOC, LCD_A0_Pin|SENS_PWR_CTRL_Pin|LCD_BACKLIGHT_Pin|MOTOR_F_Pin 
+                          |MOTOR_R_Pin|WATER_JET_EN_Pin|LORA_RST_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOA, LCD_RESET_Pin|LORA_PWR_EN_Pin, GPIO_PIN_RESET);
@@ -641,8 +660,10 @@ static void MX_GPIO_Init(void)
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(SPI_Flash_CS_GPIO_Port, SPI_Flash_CS_Pin, GPIO_PIN_SET);
 
-  /*Configure GPIO pins : LCD_A0_Pin SENS_PWR_CTRL_Pin LCD_BACKLIGHT_Pin LORA_RST_Pin */
-  GPIO_InitStruct.Pin = LCD_A0_Pin|SENS_PWR_CTRL_Pin|LCD_BACKLIGHT_Pin|LORA_RST_Pin;
+  /*Configure GPIO pins : LCD_A0_Pin SENS_PWR_CTRL_Pin LCD_BACKLIGHT_Pin MOTOR_F_Pin 
+                           MOTOR_R_Pin WATER_JET_EN_Pin LORA_RST_Pin */
+  GPIO_InitStruct.Pin = LCD_A0_Pin|SENS_PWR_CTRL_Pin|LCD_BACKLIGHT_Pin|MOTOR_F_Pin 
+                          |MOTOR_R_Pin|WATER_JET_EN_Pin|LORA_RST_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -661,6 +682,12 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(SPI_NSS_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : DTCT_SW_Pin */
+  GPIO_InitStruct.Pin = DTCT_SW_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(DTCT_SW_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pins : TRAIL_REQ_Pin M1_PUSH_DB_Pin M2_PUSH_DB_Pin M3_PUSH_DB_Pin */
   GPIO_InitStruct.Pin = TRAIL_REQ_Pin|M1_PUSH_DB_Pin|M2_PUSH_DB_Pin|M3_PUSH_DB_Pin;
@@ -739,7 +766,9 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc)
 {
   if(hadc==&hadc1){
-		
+		for(int i=0;i<7;i++){
+			conv_adc_value[i]=adc_value[i]*(float)(3.3/4095);
+		}
 	}
 }
 /* USER CODE END 4 */

@@ -1,8 +1,5 @@
 --cpu=Cortex-M4.fp --branchpatch=sdcomp-29491-629360
 "pg_self_test\startup_stm32l431xx.o"
-"pg_self_test\main.o"
-"pg_self_test\stm32l4xx_it.o"
-"pg_self_test\stm32l4xx_hal_msp.o"
 "pg_self_test\glcd.o"
 "pg_self_test\glcdfont.o"
 "pg_self_test\graphics.o"
@@ -12,6 +9,9 @@
 "pg_self_test\lcdtest.o"
 "pg_self_test\flashtest.o"
 "pg_self_test\uart.o"
+"pg_self_test\main.o"
+"pg_self_test\stm32l4xx_it.o"
+"pg_self_test\stm32l4xx_hal_msp.o"
 "pg_self_test\stm32l4xx_hal_adc.o"
 "pg_self_test\stm32l4xx_hal_adc_ex.o"
 "pg_self_test\stm32l4xx_hal_i2c.o"
