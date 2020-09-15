@@ -13,7 +13,7 @@ int LCDClickevent = 0;
 lcd_click_status_t lcd_click_status;
 
 extern SPI_HandleTypeDef hspi1;
-extern void MX_SPI1_Init(void);
+extern void MX_SPI1_Init(uint32_t lines);
 void LCD_Init(void)
 {
 		HAL_SPI_DeInit(&hspi1);
@@ -21,7 +21,7 @@ void LCD_Init(void)
 	  /*Configure GPIO pin Output Level */
 		HAL_GPIO_WritePin(SPI_NSS_GPIO_Port, SPI_NSS_Pin, GPIO_PIN_SET);
 		HAL_GPIO_WritePin(LCD_RESET_GPIO_Port, SPI_NSS_Pin,GPIO_PIN_RESET);
-		MX_SPI1_Init();
+		MX_SPI1_Init(SPI_DIRECTION_1LINE);
 	  HAL_Delay(10);
 		GLCD_CS_LOW();
 		glcd_ST7565R_init();

@@ -75,7 +75,7 @@ static void MX_DMA_Init(void);
 static void MX_USART1_UART_Init(void);
 static void MX_USART3_UART_Init(void);
 static void MX_USART2_UART_Init(void);
-void MX_SPI1_Init(void);
+void MX_SPI1_Init(uint32_t lines);
 static void MX_RTC_Init(void);
 static void MX_I2C1_Init(void);
 static void MX_ADC1_Init(void);
@@ -153,12 +153,14 @@ int main(void)
   MX_USART1_UART_Init();
   MX_USART3_UART_Init();
   MX_USART2_UART_Init();
-  MX_SPI1_Init();
+  MX_SPI1_Init(SPI_DIRECTION_2LINES);
   MX_RTC_Init();
   MX_I2C1_Init();
   MX_ADC1_Init();
   MX_LPUART1_UART_Init();
   /* USER CODE BEGIN 2 */
+	
+	/*
 	HAL_GPIO_WritePin(GPS_PWR_EN_GPIO_Port, GPS_PWR_EN_Pin, GPIO_PIN_RESET);
 	HAL_Delay(500);
 	HAL_GPIO_WritePin(GPS_PWR_EN_GPIO_Port, GPS_PWR_EN_Pin, GPIO_PIN_SET);
@@ -167,7 +169,7 @@ int main(void)
 	HAL_Delay(500);
 	HAL_GPIO_WritePin(GPS_RST_GPIO_Port, GPS_RST_Pin, GPIO_PIN_RESET);
 	HAL_UART_Receive_IT(&hlpuart1,gps_buffer,sizeof(gps_buffer));
-	HAL_ADC_Start_DMA(&hadc1,(uint32_t*)adc_value,7);
+	
 //	HAL_UART_Receive_IT(&huart1,recv_buffer,sizeof(recv_buffer));
 	HAL_GPIO_WritePin(BT_NRST_GPIO_Port,BT_NRST_Pin,GPIO_PIN_RESET);
 	HAL_Delay(10);
@@ -183,6 +185,9 @@ int main(void)
 	HAL_GPIO_WritePin(LORA_RST_GPIO_Port, LORA_RST_Pin, GPIO_PIN_SET);
 	
 	HAL_UART_Receive_IT(&huart2,lora_buffer,sizeof(lora_buffer));
+	*/
+	
+	HAL_ADC_Start_DMA(&hadc1,(uint32_t*)adc_value,7);
 	HAL_GPIO_WritePin(SENS_PWR_CTRL_GPIO_Port,SENS_PWR_CTRL_Pin,GPIO_PIN_SET);
 	HAL_GPIO_WritePin(LCD_BACKLIGHT_GPIO_Port,LCD_BACKLIGHT_Pin,GPIO_PIN_SET);
 	i2cStatus = I2C_MCP3021_Access(MCP3021_I2C_ADDRESS,&i32Encoder_Value);
@@ -195,8 +200,9 @@ int main(void)
 //	
 //	HAL_RTC_SetTime(&hrtc,&sTime,RTC_FORMAT_BIN);
 	val=HAL_RTCEx_BKUPRead(&hrtc,12);
-//	LCDTest();
 	FlashTest();
+	LCDTest();
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -585,13 +591,13 @@ static void MX_RTC_Init(void)
 }
 
 /* SPI1 init function */
-void MX_SPI1_Init(void)
+void MX_SPI1_Init(uint32_t lines)
 {
 
   /* SPI1 parameter configuration*/
   hspi1.Instance = SPI1;
   hspi1.Init.Mode = SPI_MODE_MASTER;
-  hspi1.Init.Direction = SPI_DIRECTION_2LINES;
+  hspi1.Init.Direction = lines;
   hspi1.Init.DataSize = SPI_DATASIZE_8BIT;
   hspi1.Init.CLKPolarity = SPI_POLARITY_LOW;
   hspi1.Init.CLKPhase = SPI_PHASE_1EDGE;
@@ -731,46 +737,46 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
-{
-	if(huart==&huart1){
-		HAL_UART_Receive_IT(&huart1,recv_buffer,sizeof(recv_buffer));
-	}
-	else if(huart==&huart3){
-		HAL_UART_Receive_IT(&huart3,ble_buffer,sizeof(ble_buffer));
-	}
-	else if(huart==&huart2){
-		HAL_UART_Receive_IT(&huart2,lora_buffer,sizeof(lora_buffer));
-	}
-}
+//void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+//{
+//	if(huart==&huart1){
+//		HAL_UART_Receive_IT(&huart1,recv_buffer,sizeof(recv_buffer));
+//	}
+//	else if(huart==&huart3){
+//		HAL_UART_Receive_IT(&huart3,ble_buffer,sizeof(ble_buffer));
+//	}
+//	else if(huart==&huart2){
+//		HAL_UART_Receive_IT(&huart2,lora_buffer,sizeof(lora_buffer));
+//	}
+//}
 
-void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
-{
-  if(GPIO_Pin==M1_PUSH_DB_Pin){
-		interupt_pin_press_count[0]++;
-	}
-	else if(GPIO_Pin==M2_PUSH_DB_Pin){
-		interupt_pin_press_count[1]++;
-	}
-	else if(GPIO_Pin==M3_PUSH_DB_Pin){
-		interupt_pin_press_count[2]++;
-	}
-	else if(GPIO_Pin==M4_PUSH_DB_Pin){
-		interupt_pin_press_count[3]++;
-	}
-	else if(GPIO_Pin==TRAIL_REQ_Pin){
-		interupt_pin_press_count[4]++;
-	}
-	
-}
-void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc)
-{
-  if(hadc==&hadc1){
-		for(int i=0;i<7;i++){
-			conv_adc_value[i]=adc_value[i]*(float)(3.3/4095);
-		}
-	}
-}
+//void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+//{
+//  if(GPIO_Pin==M1_PUSH_DB_Pin){
+//		interupt_pin_press_count[0]++;
+//	}
+//	else if(GPIO_Pin==M2_PUSH_DB_Pin){
+//		interupt_pin_press_count[1]++;
+//	}
+//	else if(GPIO_Pin==M3_PUSH_DB_Pin){
+//		interupt_pin_press_count[2]++;
+//	}
+//	else if(GPIO_Pin==M4_PUSH_DB_Pin){
+//		interupt_pin_press_count[3]++;
+//	}
+//	else if(GPIO_Pin==TRAIL_REQ_Pin){
+//		interupt_pin_press_count[4]++;
+//	}
+//	
+//}
+//void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc)
+//{
+//  if(hadc==&hadc1){
+//		for(int i=0;i<7;i++){
+//			conv_adc_value[i]=adc_value[i]*(float)(3.3/4095);
+//		}
+//	}
+//}
 /* USER CODE END 4 */
 
 /**
