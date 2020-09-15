@@ -10,7 +10,7 @@
 #endif
 #include "uart.h"
 #include "FlashTest.h"
-#include "PGTest_Var.h"
+
 
 static uint32_t Flash_ReadId(void);
 

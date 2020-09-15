@@ -48,3 +48,5 @@ pg_self_test\main.o: ../Inc/glcd_graphics.h
 pg_self_test\main.o: ../Inc/glcd_text_tiny.h
 pg_self_test\main.o: ../Inc/glcd_text.h
 pg_self_test\main.o: ../Inc/FlashTest.h
+pg_self_test\main.o: ../Inc/LoRaTest.h
+pg_self_test\main.o: ../Inc/PGTest.h

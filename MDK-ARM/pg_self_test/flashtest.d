@@ -41,5 +41,3 @@ pg_self_test\flashtest.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart
 pg_self_test\flashtest.o: ../Inc/PGTest.h
 pg_self_test\flashtest.o: ../Inc/uart.h
 pg_self_test\flashtest.o: ../Inc/FlashTest.h
-pg_self_test\flashtest.o: ../Inc/PGTest_Var.h
-pg_self_test\flashtest.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h

@@ -40,3 +40,4 @@ pg_self_test\uart.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart.h
 pg_self_test\uart.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart_ex.h
 pg_self_test\uart.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdarg.h
 pg_self_test\uart.o: ../Inc/PGTest.h
+pg_self_test\uart.o: ../Inc/LoRaTest.h

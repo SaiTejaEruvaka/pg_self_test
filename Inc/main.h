@@ -119,6 +119,7 @@
 
 /* USER CODE BEGIN Private defines */
 #define CONSOLE_USART  	(USART_TypeDef *)USART1
+#define LORA_USART			(USART_TypeDef *)USART2
 
 typedef union self_test_comm
 {

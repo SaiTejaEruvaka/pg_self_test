@@ -43,6 +43,8 @@
 /* USER CODE BEGIN Includes */
 #include "LCDTest.h"
 #include "FlashTest.h"
+#include "LoRaTest.h"
+#include "PGTest.h"
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
@@ -200,8 +202,10 @@ int main(void)
 //	
 //	HAL_RTC_SetTime(&hrtc,&sTime,RTC_FORMAT_BIN);
 	val=HAL_RTCEx_BKUPRead(&hrtc,12);
-	FlashTest();
-	LCDTest();
+//	FlashTest();
+//	LCDTest();
+//	LoRaTest();
+//	PGTest();
 
   /* USER CODE END 2 */
 
@@ -217,6 +221,7 @@ int main(void)
 		HAL_RTC_GetTime(&hrtc,&sTime,RTC_FORMAT_BIN);
 		HAL_RTC_GetDate(&hrtc,&sDate,RTC_FORMAT_BIN);
 		HAL_Delay(1000);
+		SWTest();
   }
   /* USER CODE END 3 */
 
@@ -562,28 +567,28 @@ static void MX_RTC_Init(void)
 
     /**Initialize RTC and set the Time and Date 
     */
-  sTime.Hours = 11;
-  sTime.Minutes = 49;
-  sTime.Seconds = 0;
-  sTime.DayLightSaving = RTC_DAYLIGHTSAVING_NONE;
-  sTime.StoreOperation = RTC_STOREOPERATION_RESET;
-  if (HAL_RTC_SetTime(&hrtc, &sTime, RTC_FORMAT_BIN) != HAL_OK)
-  {
-    _Error_Handler(__FILE__, __LINE__);
-  }
+//  sTime.Hours = 11;
+//  sTime.Minutes = 49;
+//  sTime.Seconds = 0;
+//  sTime.DayLightSaving = RTC_DAYLIGHTSAVING_NONE;
+//  sTime.StoreOperation = RTC_STOREOPERATION_RESET;
+//  if (HAL_RTC_SetTime(&hrtc, &sTime, RTC_FORMAT_BIN) != HAL_OK)
+//  {
+//    _Error_Handler(__FILE__, __LINE__);
+//  }
   /* USER CODE BEGIN RTC_Init 3 */
 
   /* USER CODE END RTC_Init 3 */
 
-  sDate.WeekDay = RTC_WEEKDAY_SATURDAY;
-  sDate.Month = RTC_MONTH_SEPTEMBER;
-  sDate.Date = 14;
-  sDate.Year = 20;
+//  sDate.WeekDay = RTC_WEEKDAY_SATURDAY;
+//  sDate.Month = RTC_MONTH_SEPTEMBER;
+//  sDate.Date = 14;
+//  sDate.Year = 20;
 
-  if (HAL_RTC_SetDate(&hrtc, &sDate, RTC_FORMAT_BIN) != HAL_OK)
-  {
-    _Error_Handler(__FILE__, __LINE__);
-  }
+//  if (HAL_RTC_SetDate(&hrtc, &sDate, RTC_FORMAT_BIN) != HAL_OK)
+//  {
+//    _Error_Handler(__FILE__, __LINE__);
+//  }
   /* USER CODE BEGIN RTC_Init 4 */
 
   /* USER CODE END RTC_Init 4 */
@@ -750,25 +755,38 @@ static void MX_GPIO_Init(void)
 //	}
 //}
 
-//void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
-//{
-//  if(GPIO_Pin==M1_PUSH_DB_Pin){
-//		interupt_pin_press_count[0]++;
-//	}
-//	else if(GPIO_Pin==M2_PUSH_DB_Pin){
-//		interupt_pin_press_count[1]++;
-//	}
-//	else if(GPIO_Pin==M3_PUSH_DB_Pin){
-//		interupt_pin_press_count[2]++;
-//	}
-//	else if(GPIO_Pin==M4_PUSH_DB_Pin){
-//		interupt_pin_press_count[3]++;
-//	}
-//	else if(GPIO_Pin==TRAIL_REQ_Pin){
-//		interupt_pin_press_count[4]++;
-//	}
-//	
-//}
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+{
+  if(GPIO_Pin==M1_PUSH_DB_Pin){
+		interupt_pin_press_count[0]++;
+		lcd_click_status = UP_CLICK_EVENT;
+		LCDClickevent = 1;
+	}
+	else if(GPIO_Pin==M2_PUSH_DB_Pin){
+		interupt_pin_press_count[1]++;
+		lcd_click_status = DOWN_CLICK_EVENT;
+		LCDClickevent = 1;
+	}
+	else if(GPIO_Pin==M3_PUSH_DB_Pin){
+		interupt_pin_press_count[2]++;
+		lcd_click_status = MENU_CLICK_EVENT;
+		LCDClickevent = 1;
+	}
+	else if(GPIO_Pin==M4_PUSH_DB_Pin){
+		interupt_pin_press_count[3]++;
+		lcd_click_status = BACK_CLICK_EVENT;
+		LCDClickevent = 1;
+	}
+	else if(GPIO_Pin==TRAIL_REQ_Pin){
+		interupt_pin_press_count[4]++;
+		lcd_click_status = TRAIL_RUN;
+		LCDClickevent = 1;
+	}
+	else{
+		LCDClickevent = 0;
+	}
+	
+}
 //void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc)
 //{
 //  if(hadc==&hadc1){

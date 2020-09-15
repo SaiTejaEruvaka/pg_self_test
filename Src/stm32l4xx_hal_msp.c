@@ -438,7 +438,7 @@ void HAL_RTC_MspInit(RTC_HandleTypeDef* hrtc)
     /* Peripheral clock enable */
     __HAL_RCC_RTC_ENABLE();
   /* USER CODE BEGIN RTC_MspInit 1 */
-
+		
   /* USER CODE END RTC_MspInit 1 */
   }
 
