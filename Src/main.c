@@ -130,7 +130,7 @@ HAL_StatusTypeDef i2cStatus;
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-
+//499 or 100 ohm
   /* USER CODE END 1 */
 
   /* MCU Configuration----------------------------------------------------------*/
@@ -195,7 +195,14 @@ int main(void)
 	i2cStatus = I2C_MCP3021_Access(MCP3021_I2C_ADDRESS,&i32Encoder_Value);
 	ret=HAL_I2C_Master_Receive(&hi2c1,0xAA,i2c_data,sizeof(i2c_data),5000);
 	ret=HAL_I2C_Master_Receive(&hi2c1,0x9F,i2c_data,sizeof(i2c_data),5000);
-	
+//	HAL_GPIO_WritePin(WATER_JET_EN_GPIO_Port,WATER_JET_EN_Pin,GPIO_PIN_SET);
+	HAL_GPIO_WritePin(MOTOR_F_GPIO_Port,MOTOR_F_Pin,GPIO_PIN_SET);
+	HAL_GPIO_WritePin(MOTOR_R_GPIO_Port,MOTOR_R_Pin,GPIO_PIN_RESET);
+	HAL_Delay(5000);
+	HAL_GPIO_WritePin(MOTOR_R_GPIO_Port,MOTOR_R_Pin,GPIO_PIN_SET);
+	HAL_Delay(1000);
+	HAL_GPIO_WritePin(MOTOR_F_GPIO_Port,MOTOR_F_Pin,GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(MOTOR_R_GPIO_Port,MOTOR_R_Pin,GPIO_PIN_SET);
 //	sTime.Hours=11;
 //	sTime.Minutes=53;
 //	sTime.Seconds=45;
@@ -787,14 +794,20 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 	}
 	
 }
-//void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc)
-//{
-//  if(hadc==&hadc1){
-//		for(int i=0;i<7;i++){
-//			conv_adc_value[i]=adc_value[i]*(float)(3.3/4095);
-//		}
-//	}
-//}
+uint16_t max=0;
+void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc)
+{
+  if(hadc==&hadc1){
+		for(int i=0;i<7;i++){
+			if(i==0){
+				if(adc_value[0]>max){
+					max=adc_value[0];
+				}
+			}
+			conv_adc_value[i]=(adc_value[i]*(float)(3/4095))/264;
+		}
+	}
+}
 /* USER CODE END 4 */
 
 /**
