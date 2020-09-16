@@ -53,3 +53,4 @@ pg_self_test\pgtest.o: ../Inc/glcd_text_tiny.h
 pg_self_test\pgtest.o: ../Inc/glcd_text.h
 pg_self_test\pgtest.o: ../Inc/FlashTest.h
 pg_self_test\pgtest.o: ../Inc/LoRaTest.h
+pg_self_test\pgtest.o: ../Inc/rtc.h

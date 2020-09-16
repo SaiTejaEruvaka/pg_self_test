@@ -85,6 +85,8 @@
 #define MOTOR_F_GPIO_Port GPIOC
 #define MOTOR_R_Pin GPIO_PIN_9
 #define MOTOR_R_GPIO_Port GPIOC
+#define IND_SENSE_Pin GPIO_PIN_8
+#define IND_SENSE_GPIO_Port GPIOA
 #define M4_PUSH_DB_Pin GPIO_PIN_11
 #define M4_PUSH_DB_GPIO_Port GPIOA
 #define M4_PUSH_DB_EXTI_IRQn EXTI15_10_IRQn

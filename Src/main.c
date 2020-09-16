@@ -214,7 +214,7 @@ int main(void)
 //	FlashTest();
 //	LCDTest();
 //	LoRaTest();
-//	PGTest();
+	PGTest();
 
   /* USER CODE END 2 */
 
@@ -552,6 +552,7 @@ static void MX_RTC_Init(void)
 
   RTC_TimeTypeDef sTime;
   RTC_DateTypeDef sDate;
+  RTC_AlarmTypeDef sAlarm;
 
   /* USER CODE BEGIN RTC_Init 1 */
 
@@ -577,31 +578,52 @@ static void MX_RTC_Init(void)
 
     /**Initialize RTC and set the Time and Date 
     */
-//  sTime.Hours = 11;
-//  sTime.Minutes = 49;
-//  sTime.Seconds = 0;
-//  sTime.DayLightSaving = RTC_DAYLIGHTSAVING_NONE;
-//  sTime.StoreOperation = RTC_STOREOPERATION_RESET;
-//  if (HAL_RTC_SetTime(&hrtc, &sTime, RTC_FORMAT_BIN) != HAL_OK)
-//  {
-//    _Error_Handler(__FILE__, __LINE__);
-//  }
+  sTime.Hours = 11;
+  sTime.Minutes = 49;
+  sTime.Seconds = 0;
+  sTime.DayLightSaving = RTC_DAYLIGHTSAVING_NONE;
+  sTime.StoreOperation = RTC_STOREOPERATION_RESET;
+  if (HAL_RTC_SetTime(&hrtc, &sTime, RTC_FORMAT_BIN) != HAL_OK)
+  {
+    _Error_Handler(__FILE__, __LINE__);
+  }
   /* USER CODE BEGIN RTC_Init 3 */
 
   /* USER CODE END RTC_Init 3 */
 
-//  sDate.WeekDay = RTC_WEEKDAY_SATURDAY;
-//  sDate.Month = RTC_MONTH_SEPTEMBER;
-//  sDate.Date = 14;
-//  sDate.Year = 20;
+  sDate.WeekDay = RTC_WEEKDAY_SATURDAY;
+  sDate.Month = RTC_MONTH_SEPTEMBER;
+  sDate.Date = 14;
+  sDate.Year = 20;
 
-//  if (HAL_RTC_SetDate(&hrtc, &sDate, RTC_FORMAT_BIN) != HAL_OK)
-//  {
-//    _Error_Handler(__FILE__, __LINE__);
-//  }
+  if (HAL_RTC_SetDate(&hrtc, &sDate, RTC_FORMAT_BIN) != HAL_OK)
+  {
+    _Error_Handler(__FILE__, __LINE__);
+  }
   /* USER CODE BEGIN RTC_Init 4 */
 
   /* USER CODE END RTC_Init 4 */
+
+    /**Enable the Alarm A 
+    */
+  sAlarm.AlarmTime.Hours = 0;
+  sAlarm.AlarmTime.Minutes = 0;
+  sAlarm.AlarmTime.Seconds = 0;
+  sAlarm.AlarmTime.SubSeconds = 0;
+  sAlarm.AlarmTime.DayLightSaving = RTC_DAYLIGHTSAVING_NONE;
+  sAlarm.AlarmTime.StoreOperation = RTC_STOREOPERATION_RESET;
+  sAlarm.AlarmMask = RTC_ALARMMASK_NONE;
+  sAlarm.AlarmSubSecondMask = RTC_ALARMSUBSECONDMASK_ALL;
+  sAlarm.AlarmDateWeekDaySel = RTC_ALARMDATEWEEKDAYSEL_DATE;
+  sAlarm.AlarmDateWeekDay = 1;
+  sAlarm.Alarm = RTC_ALARM_A;
+  if (HAL_RTC_SetAlarm(&hrtc, &sAlarm, RTC_FORMAT_BIN) != HAL_OK)
+  {
+    _Error_Handler(__FILE__, __LINE__);
+  }
+  /* USER CODE BEGIN RTC_Init 5 */
+
+  /* USER CODE END RTC_Init 5 */
 
 }
 
@@ -670,7 +692,7 @@ static void MX_GPIO_Init(void)
                           |MOTOR_R_Pin|WATER_JET_EN_Pin|LORA_RST_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, LCD_RESET_Pin|LORA_PWR_EN_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, LCD_RESET_Pin|IND_SENSE_Pin|LORA_PWR_EN_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(SPI_NSS_GPIO_Port, SPI_NSS_Pin, GPIO_PIN_SET);
@@ -690,8 +712,8 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : LCD_RESET_Pin LORA_PWR_EN_Pin */
-  GPIO_InitStruct.Pin = LCD_RESET_Pin|LORA_PWR_EN_Pin|GPIO_PIN_8;
+  /*Configure GPIO pins : LCD_RESET_Pin IND_SENSE_Pin LORA_PWR_EN_Pin */
+  GPIO_InitStruct.Pin = LCD_RESET_Pin|IND_SENSE_Pin|LORA_PWR_EN_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;

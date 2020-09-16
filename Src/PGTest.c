@@ -7,6 +7,7 @@
 #include "LCDTest.h"
 #include "FlashTest.h"
 #include "LoRaTest.h"
+#include "rtc.h"
 extern void MX_USART3_UART_Init(int);
 
 extern char LCD[LCD_MAX_LINES][LINE_SIZE + 1];
@@ -703,17 +704,17 @@ void vBLE_Init(){
 
 void RTC_Chck()
 {
-//	usartTx(CONSOLE_USART,"\r\n Initialising RTC");
-//	PLATFORM_RTC_Set_Alarm(1);
-//	HAL_Delay(2100);
-//	if(RTC_AlarmEvntflag == SET)
-//	{
-//		PG_Cntrltest.self_test_PGcntrl.rtc_b = 1;
-//		usartTx(CONSOLE_USART,"\r\n RTC............OK");
-//	}
-//	else {
-//		usartTx(CONSOLE_USART,"\r\n RTC............FAIL");
-//	}
+	usartTx(CONSOLE_USART,"\r\n Initialising RTC");
+	PLATFORM_RTC_Set_Alarm(1);
+	HAL_Delay(2100);
+	if(RTC_AlarmEvntflag == SET)
+	{
+		PG_Cntrltest.self_test_PGcntrl.rtc_b = 1;
+		usartTx(CONSOLE_USART,"\r\n RTC............OK");
+	}
+	else {
+		usartTx(CONSOLE_USART,"\r\n RTC............FAIL");
+	}
 }
 void Check_contr_PCB()
 {

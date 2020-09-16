@@ -337,7 +337,7 @@
               <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER,STM32L431xx,MODULE_LORA_MCHIP,BOARD_VERSION_12,BOARD_VERSION_11,PONDGUARD,PG2_5</Define>
               <Undefine></Undefine>
-              <IncludePath>../Inc;       ../Drivers/STM32L4xx_HAL_Driver/Inc;       ../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy;       ../Drivers/CMSIS/Device/ST/STM32L4xx/Include;       ../Drivers/CMSIS/Include</IncludePath>
+              <IncludePath>../Inc;         ../Drivers/STM32L4xx_HAL_Driver/Inc;         ../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy;         ../Drivers/CMSIS/Device/ST/STM32L4xx/Include;         ../Drivers/CMSIS/Include</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -437,6 +437,16 @@
               <FilePath>..\Src\uart.c</FilePath>
             </File>
             <File>
+              <FileName>LoRaTest.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\LoRaTest.c</FilePath>
+            </File>
+            <File>
+              <FileName>PGTest.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\PGTest.c</FilePath>
+            </File>
+            <File>
               <FileName>main.c</FileName>
               <FileType>1</FileType>
               <FilePath>../Src/main.c</FilePath>
@@ -452,14 +462,9 @@
               <FilePath>../Src/stm32l4xx_hal_msp.c</FilePath>
             </File>
             <File>
-              <FileName>LoRaTest.c</FileName>
+              <FileName>rtc.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Src\LoRaTest.c</FilePath>
-            </File>
-            <File>
-              <FileName>PGTest.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Src\PGTest.c</FilePath>
+              <FilePath>..\Src\rtc.c</FilePath>
             </File>
           </Files>
         </Group>
