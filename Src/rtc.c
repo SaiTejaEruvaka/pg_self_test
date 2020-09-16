@@ -43,6 +43,7 @@ void PLATFORM_RTC_Set_Alarm(int seconds);
 extern void RTC_Alarm_Handler(void);
 RTC_AlarmTypeDef next_sAlarm;
 extern uint8_t RTC_AlarmEvntflag;
+HAL_StatusTypeDef status1;
 /* USER CODE END 0 */
 
 void Read_Date(void)
@@ -73,10 +74,6 @@ void Read_Date(void)
 }
 
 /* USER CODE BEGIN 1 */
-void HAL_RTC_AlarmAEventCallback(RTC_HandleTypeDef *hrtc)
-{
-    RTC_AlarmEvntflag = SET;
-}
 
 void HAL_RTCEx_RTCEventCallback(RTC_HandleTypeDef *hrtc)
 {
@@ -117,14 +114,14 @@ void PLATFORM_RTC_Set_Date(uint8_t year, uint8_t month, uint8_t day)
 }
 void PLATFORM_RTC_Set_Alarm(int seconds)
 {
-    RTC_TimeTypeDef sTime;
-		RTC_DateTypeDef sDate;
+    RTC_TimeTypeDef sTime1;
+		RTC_DateTypeDef sDate1;
 		uint32_t nextAlarm;
 	
 //    debug_log("Setting Alarm");
-    HAL_RTC_GetTime(&hrtc, &sTime, RTC_FORMAT_BIN);
-		HAL_RTC_GetDate(&hrtc,&sDate,RTC_FORMAT_BIN);
-	  nextAlarm = ((sTime.Hours * 3600) + (sTime.Minutes * 60) + (sTime.Seconds)) + seconds;
+    status1=HAL_RTC_GetTime(&hrtc, &sTime1, RTC_FORMAT_BIN);
+		status1=HAL_RTC_GetDate(&hrtc,&sDate1,RTC_FORMAT_BIN);
+	  nextAlarm = ((sTime1.Hours * 3600) + (sTime1.Minutes * 60) + (sTime1.Seconds)) + seconds;
     /*
 		 * Enable the Alarm A
      */
@@ -150,8 +147,13 @@ void PLATFORM_RTC_Set_Alarm(int seconds)
 			 next_sAlarm.AlarmTime.Minutes = 59;
 			 next_sAlarm.AlarmTime.Seconds = 00;
     }
-    next_sAlarm.Alarm = RTC_ALARM_A;
-    HAL_RTC_SetAlarm_IT(&hrtc, &next_sAlarm, RTC_FORMAT_BIN);
+		next_sAlarm.AlarmMask = RTC_ALARMMASK_NONE;
+		next_sAlarm.AlarmSubSecondMask = RTC_ALARMSUBSECONDMASK_ALL;
+		next_sAlarm.AlarmDateWeekDaySel = RTC_ALARMDATEWEEKDAYSEL_DATE;
+		next_sAlarm.AlarmDateWeekDay = sDate1.Date;
+		next_sAlarm.Alarm = RTC_ALARM_A;
+		status1=HAL_RTC_DeactivateAlarm(&hrtc,next_sAlarm.Alarm);
+    status1=HAL_RTC_SetAlarm_IT(&hrtc, &next_sAlarm, RTC_FORMAT_BIN);
 }
 
 uint32_t PLATFORM_RTC_get_expiry(void)

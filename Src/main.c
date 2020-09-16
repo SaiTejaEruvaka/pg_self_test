@@ -91,7 +91,7 @@ static void MX_LPUART1_UART_Init(void);
 /* USER CODE BEGIN 0 */
 
 //char LCD[LCD_MAX_LINES][LINE_SIZE + 1];
-
+extern uint8_t RTC_AlarmEvntflag;
 
 
 	uint8_t recv_buffer[10];
@@ -606,21 +606,21 @@ static void MX_RTC_Init(void)
 
     /**Enable the Alarm A 
     */
-  sAlarm.AlarmTime.Hours = 0;
-  sAlarm.AlarmTime.Minutes = 0;
-  sAlarm.AlarmTime.Seconds = 0;
-  sAlarm.AlarmTime.SubSeconds = 0;
-  sAlarm.AlarmTime.DayLightSaving = RTC_DAYLIGHTSAVING_NONE;
-  sAlarm.AlarmTime.StoreOperation = RTC_STOREOPERATION_RESET;
-  sAlarm.AlarmMask = RTC_ALARMMASK_NONE;
-  sAlarm.AlarmSubSecondMask = RTC_ALARMSUBSECONDMASK_ALL;
-  sAlarm.AlarmDateWeekDaySel = RTC_ALARMDATEWEEKDAYSEL_DATE;
-  sAlarm.AlarmDateWeekDay = 1;
-  sAlarm.Alarm = RTC_ALARM_A;
-  if (HAL_RTC_SetAlarm(&hrtc, &sAlarm, RTC_FORMAT_BIN) != HAL_OK)
-  {
-    _Error_Handler(__FILE__, __LINE__);
-  }
+//  sAlarm.AlarmTime.Hours = 11;
+//  sAlarm.AlarmTime.Minutes = 49;
+//  sAlarm.AlarmTime.Seconds = 10;
+//  sAlarm.AlarmTime.SubSeconds = 0;
+//  sAlarm.AlarmTime.DayLightSaving = RTC_DAYLIGHTSAVING_NONE;
+//  sAlarm.AlarmTime.StoreOperation = RTC_STOREOPERATION_RESET;
+//  sAlarm.AlarmMask = RTC_ALARMMASK_NONE;
+//  sAlarm.AlarmSubSecondMask = RTC_ALARMSUBSECONDMASK_ALL;
+//  sAlarm.AlarmDateWeekDaySel = RTC_ALARMDATEWEEKDAYSEL_DATE;
+//  sAlarm.AlarmDateWeekDay = 14;
+//  sAlarm.Alarm = RTC_ALARM_A;
+//  if (HAL_RTC_SetAlarm_IT(&hrtc, &sAlarm, RTC_FORMAT_BIN) != HAL_OK)
+//  {
+//    _Error_Handler(__FILE__, __LINE__);
+//  }
   /* USER CODE BEGIN RTC_Init 5 */
 
   /* USER CODE END RTC_Init 5 */
@@ -786,6 +786,10 @@ static void MX_GPIO_Init(void)
 //		HAL_UART_Receive_IT(&huart2,lora_buffer,sizeof(lora_buffer));
 //	}
 //}
+void HAL_RTC_AlarmAEventCallback(RTC_HandleTypeDef *hrtc)
+{
+    RTC_AlarmEvntflag = SET;
+}
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {

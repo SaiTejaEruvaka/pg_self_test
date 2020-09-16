@@ -725,10 +725,10 @@ void Check_contr_PCB()
 	LCDTest();
 	/* Test LoRa chip */
 	LoRaTest();
-	vGPS_Init(); 
+//	vGPS_Init(); 
 	
 	#ifdef PG2_5
-	vBLE_Init();
+//	vBLE_Init();
 	#endif
 	
 	HAL_GPIO_WritePin(POSITION_MOTOR_PORT, POSITION_MOTOR_FWD_PIN,GPIO_PIN_RESET);
