@@ -120,6 +120,7 @@ HAL_StatusTypeDef i2cStatus;
 	RTC_TimeTypeDef sTime;
 	RTC_DateTypeDef sDate;
 	uint32_t val=0;
+	GPIO_PinState abc;
 /* USER CODE END 0 */
 
 /**
@@ -190,12 +191,13 @@ int main(void)
 	*/
 	
 	HAL_ADC_Start_DMA(&hadc1,(uint32_t*)adc_value,7);
-	HAL_GPIO_WritePin(SENS_PWR_CTRL_GPIO_Port,SENS_PWR_CTRL_Pin,GPIO_PIN_SET);
+//	HAL_GPIO_WritePin(SENS_PWR_CTRL_GPIO_Port,SENS_PWR_CTRL_Pin,GPIO_PIN_SET);
 	HAL_GPIO_WritePin(LCD_BACKLIGHT_GPIO_Port,LCD_BACKLIGHT_Pin,GPIO_PIN_SET);
 	i2cStatus = I2C_MCP3021_Access(MCP3021_I2C_ADDRESS,&i32Encoder_Value);
 	ret=HAL_I2C_Master_Receive(&hi2c1,0xAA,i2c_data,sizeof(i2c_data),5000);
 	ret=HAL_I2C_Master_Receive(&hi2c1,0x9F,i2c_data,sizeof(i2c_data),5000);
 //	HAL_GPIO_WritePin(WATER_JET_EN_GPIO_Port,WATER_JET_EN_Pin,GPIO_PIN_SET);
+	HAL_GPIO_WritePin(GPIOA,GPIO_PIN_8,GPIO_PIN_RESET);
 	HAL_GPIO_WritePin(MOTOR_F_GPIO_Port,MOTOR_F_Pin,GPIO_PIN_SET);
 	HAL_GPIO_WritePin(MOTOR_R_GPIO_Port,MOTOR_R_Pin,GPIO_PIN_RESET);
 	HAL_Delay(5000);
@@ -228,6 +230,7 @@ int main(void)
 		HAL_RTC_GetTime(&hrtc,&sTime,RTC_FORMAT_BIN);
 		HAL_RTC_GetDate(&hrtc,&sDate,RTC_FORMAT_BIN);
 		HAL_Delay(1000);
+		abc=HAL_GPIO_ReadPin(DTCT_SW_GPIO_Port,DTCT_SW_Pin);
 		SWTest();
   }
   /* USER CODE END 3 */
@@ -688,7 +691,7 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
   /*Configure GPIO pins : LCD_RESET_Pin LORA_PWR_EN_Pin */
-  GPIO_InitStruct.Pin = LCD_RESET_Pin|LORA_PWR_EN_Pin;
+  GPIO_InitStruct.Pin = LCD_RESET_Pin|LORA_PWR_EN_Pin|GPIO_PIN_8;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;

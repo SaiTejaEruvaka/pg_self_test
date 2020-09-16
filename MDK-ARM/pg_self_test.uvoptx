@@ -152,9 +152,9 @@
         <Bp>
           <Number>0</Number>
           <Type>0</Type>
-          <LineNumber>228</LineNumber>
+          <LineNumber>230</LineNumber>
           <EnabledFlag>0</EnabledFlag>
-          <Address>134236904</Address>
+          <Address>134236916</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -163,7 +163,7 @@
           <BreakIfRCount>1</BreakIfRCount>
           <Filename>../Src/main.c</Filename>
           <ExecCommand></ExecCommand>
-          <Expression>\\pg_self_test\../Src/main.c\228</Expression>
+          <Expression>\\pg_self_test\../Src/main.c\230</Expression>
         </Bp>
       </Breakpoint>
       <WatchWindow1>
@@ -241,6 +241,11 @@
           <count>14</count>
           <WinNumber>1</WinNumber>
           <ItemText>max</ItemText>
+        </Ww>
+        <Ww>
+          <count>15</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>abc</ItemText>
         </Ww>
       </WatchWindow1>
       <Tracepoint>
