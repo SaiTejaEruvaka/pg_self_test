@@ -826,6 +826,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 uint16_t max=0;
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc)
 {
+	//INA Vo=(Is*Rs*Rl)/5K
   if(hadc==&hadc1){
 		for(int i=0;i<7;i++){
 			if(i==0){

@@ -705,8 +705,8 @@ void vBLE_Init(){
 void RTC_Chck()
 {
 	usartTx(CONSOLE_USART,"\r\n Initialising RTC");
-	PLATFORM_RTC_Set_Alarm(1);
-	HAL_Delay(2100);
+	PLATFORM_RTC_Set_Alarm(2);
+	HAL_Delay(5000);
 	if(RTC_AlarmEvntflag == SET)
 	{
 		PG_Cntrltest.self_test_PGcntrl.rtc_b = 1;
@@ -725,10 +725,10 @@ void Check_contr_PCB()
 	LCDTest();
 	/* Test LoRa chip */
 	LoRaTest();
-//	vGPS_Init(); 
+	vGPS_Init(); 
 	
 	#ifdef PG2_5
-//	vBLE_Init();
+	vBLE_Init();
 	#endif
 	
 	HAL_GPIO_WritePin(POSITION_MOTOR_PORT, POSITION_MOTOR_FWD_PIN,GPIO_PIN_RESET);

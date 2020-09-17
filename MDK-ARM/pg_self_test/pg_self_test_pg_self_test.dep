@@ -322,7 +322,7 @@ I (../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_spi.h)(0x5F5A2554)
 I (../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_spi_ex.h)(0x5F5A2554)
 I (../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart.h)(0x5F5A2554)
 I (../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart_ex.h)(0x5F5A2554)
-I (../Inc/PGTest.h)(0x5F5B3BB0)
+I (../Inc/PGTest.h)(0x5F61D072)
 I (../Inc/uart.h)(0x5F607B97)
 I (../Inc/FlashTest.h)(0x5F605CBF)
 F (..\Src\uart.c)(0x5F608732)(--c99 -c --cpu Cortex-M4.fp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32L4xx_HAL_Driver/Inc -I ../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_pg_self_test-IC:\Users\Eruvaka\AppData\Local\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include-IC:\Users\Eruvaka\AppData\Local\Arm\Packs\Keil\STM32L4xx_DFP\2.4.0\Drivers\CMSIS\Device\ST\STM32L4xx\Include-D__UVISION_VERSION="525" -D_RTE_ -DSTM32L431xx -DUSE_HAL_DRIVER -DSTM32L431xx -DMODULE_LORA_MCHIP -DBOARD_VERSION_12 -DBOARD_VERSION_11 -DPONDGUARD -DPG2_5-o pg_self_test\uart.o --omf_browse pg_self_test\uart.crf --depend pg_self_test\uart.d)
@@ -365,7 +365,7 @@ I (../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_spi_ex.h)(0x5F5A2554)
 I (../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart.h)(0x5F5A2554)
 I (../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart_ex.h)(0x5F5A2554)
 I (C:\Keil_v5\ARM\ARMCC\include\stdarg.h)(0x599EF052)
-I (../Inc/PGTest.h)(0x5F5B3BB0)
+I (../Inc/PGTest.h)(0x5F61D072)
 I (../Inc/LoRaTest.h)(0x5F5B3D96)
 F (..\Src\LoRaTest.c)(0x5F606751)(--c99 -c --cpu Cortex-M4.fp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32L4xx_HAL_Driver/Inc -I ../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_pg_self_test-IC:\Users\Eruvaka\AppData\Local\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include-IC:\Users\Eruvaka\AppData\Local\Arm\Packs\Keil\STM32L4xx_DFP\2.4.0\Drivers\CMSIS\Device\ST\STM32L4xx\Include-D__UVISION_VERSION="525" -D_RTE_ -DSTM32L431xx -DUSE_HAL_DRIVER -DSTM32L431xx -DMODULE_LORA_MCHIP -DBOARD_VERSION_12 -DBOARD_VERSION_11 -DPONDGUARD -DPG2_5-o pg_self_test\loratest.o --omf_browse pg_self_test\loratest.crf --depend pg_self_test\loratest.d)
 I (../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h)(0x5F5A2554)
@@ -408,11 +408,11 @@ I (../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart.h)(0x5F5A2554)
 I (../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart_ex.h)(0x5F5A2554)
 I (C:\Keil_v5\ARM\ARMCC\include\string.h)(0x599EF054)
 I (C:\Keil_v5\ARM\ARMCC\include\stdlib.h)(0x599EF054)
-I (../Inc/PGTest.h)(0x5F5B3BB0)
+I (../Inc/PGTest.h)(0x5F61D072)
 I (../Inc/LoRaTest.h)(0x5F5B3D96)
 I (../Inc/uart.h)(0x5F607B97)
-F (..\Src\PGTest.c)(0x5F61CD0D)(--c99 -c --cpu Cortex-M4.fp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32L4xx_HAL_Driver/Inc -I ../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_pg_self_test-IC:\Users\Eruvaka\AppData\Local\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include-IC:\Users\Eruvaka\AppData\Local\Arm\Packs\Keil\STM32L4xx_DFP\2.4.0\Drivers\CMSIS\Device\ST\STM32L4xx\Include-D__UVISION_VERSION="525" -D_RTE_ -DSTM32L431xx -DUSE_HAL_DRIVER -DSTM32L431xx -DMODULE_LORA_MCHIP -DBOARD_VERSION_12 -DBOARD_VERSION_11 -DPONDGUARD -DPG2_5-o pg_self_test\pgtest.o --omf_browse pg_self_test\pgtest.crf --depend pg_self_test\pgtest.d)
-I (../Inc/PGTest.h)(0x5F5B3BB0)
+F (..\Src\PGTest.c)(0x5F61CEA1)(--c99 -c --cpu Cortex-M4.fp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32L4xx_HAL_Driver/Inc -I ../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_pg_self_test-IC:\Users\Eruvaka\AppData\Local\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include-IC:\Users\Eruvaka\AppData\Local\Arm\Packs\Keil\STM32L4xx_DFP\2.4.0\Drivers\CMSIS\Device\ST\STM32L4xx\Include-D__UVISION_VERSION="525" -D_RTE_ -DSTM32L431xx -DUSE_HAL_DRIVER -DSTM32L431xx -DMODULE_LORA_MCHIP -DBOARD_VERSION_12 -DBOARD_VERSION_11 -DPONDGUARD -DPG2_5-o pg_self_test\pgtest.o --omf_browse pg_self_test\pgtest.crf --depend pg_self_test\pgtest.d)
+I (../Inc/PGTest.h)(0x5F61D072)
 I (../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h)(0x5F5A2554)
 I (../Inc/stm32l4xx_hal_conf.h)(0x5F61B99D)
 I (../Inc/main.h)(0x5F61B99D)
@@ -556,7 +556,7 @@ I (../Inc/glcd_text_tiny.h)(0x5F5B392D)
 I (../Inc/glcd_text.h)(0x5F5B392D)
 I (../Inc/FlashTest.h)(0x5F605CBF)
 I (../Inc/LoRaTest.h)(0x5F5B3D96)
-I (../Inc/PGTest.h)(0x5F5B3BB0)
+I (../Inc/PGTest.h)(0x5F61D072)
 F (../Src/stm32l4xx_it.c)(0x5F61B99C)(--c99 -c --cpu Cortex-M4.fp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32L4xx_HAL_Driver/Inc -I ../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_pg_self_test-IC:\Users\Eruvaka\AppData\Local\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include-IC:\Users\Eruvaka\AppData\Local\Arm\Packs\Keil\STM32L4xx_DFP\2.4.0\Drivers\CMSIS\Device\ST\STM32L4xx\Include-D__UVISION_VERSION="525" -D_RTE_ -DSTM32L431xx -DUSE_HAL_DRIVER -DSTM32L431xx -DMODULE_LORA_MCHIP -DBOARD_VERSION_12 -DBOARD_VERSION_11 -DPONDGUARD -DPG2_5-o pg_self_test\stm32l4xx_it.o --omf_browse pg_self_test\stm32l4xx_it.crf --depend pg_self_test\stm32l4xx_it.d)
 I (../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h)(0x5F5A2554)
 I (../Inc/stm32l4xx_hal_conf.h)(0x5F61B99D)
