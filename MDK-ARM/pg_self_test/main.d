@@ -50,3 +50,5 @@ pg_self_test\main.o: ../Inc/glcd_text.h
 pg_self_test\main.o: ../Inc/FlashTest.h
 pg_self_test\main.o: ../Inc/LoRaTest.h
 pg_self_test\main.o: ../Inc/PGTest.h
+pg_self_test\main.o: ../Inc/uart.h
+pg_self_test\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h

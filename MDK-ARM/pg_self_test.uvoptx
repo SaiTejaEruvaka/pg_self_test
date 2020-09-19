@@ -148,40 +148,7 @@
           <Name>-U56FF6F066772565649231367 -O2254 -SF4000 -C0 -A0 -I0 -HNlocalhost -HP7184 -P2 -N00("ARM CoreSight SW-DP") -D00(2BA01477) -L00(0) -TO18 -TC10000000 -TP21 -TDS8004 -TDT0 -TDC1F -TIEFFFFFFFF -TIP8 -FO31 -FD20000000 -FC1000 -FN1 -FF0STM32L4xx_256.FLM -FS08000000 -FL040000 -FP0($$Device:STM32L431RCTx$CMSIS\Flash\STM32L4xx_256.FLM)</Name>
         </SetRegEntry>
       </TargetDriverDllRegistry>
-      <Breakpoint>
-        <Bp>
-          <Number>0</Number>
-          <Type>0</Type>
-          <LineNumber>708</LineNumber>
-          <EnabledFlag>1</EnabledFlag>
-          <Address>134237504</Address>
-          <ByteObject>0</ByteObject>
-          <HtxType>0</HtxType>
-          <ManyObjects>0</ManyObjects>
-          <SizeOfObject>0</SizeOfObject>
-          <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>1</BreakIfRCount>
-          <Filename>..\Src\PGTest.c</Filename>
-          <ExecCommand></ExecCommand>
-          <Expression>\\pg_self_test\../Src/PGTest.c\708</Expression>
-        </Bp>
-        <Bp>
-          <Number>1</Number>
-          <Type>0</Type>
-          <LineNumber>791</LineNumber>
-          <EnabledFlag>1</EnabledFlag>
-          <Address>134229880</Address>
-          <ByteObject>0</ByteObject>
-          <HtxType>0</HtxType>
-          <ManyObjects>0</ManyObjects>
-          <SizeOfObject>0</SizeOfObject>
-          <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>1</BreakIfRCount>
-          <Filename>../Src/main.c</Filename>
-          <ExecCommand></ExecCommand>
-          <Expression>\\pg_self_test\../Src/main.c\791</Expression>
-        </Bp>
-      </Breakpoint>
+      <Breakpoint/>
       <WatchWindow1>
         <Ww>
           <count>0</count>
@@ -201,7 +168,7 @@
         <Ww>
           <count>3</count>
           <WinNumber>1</WinNumber>
-          <ItemText>i2c_data</ItemText>
+          <ItemText>max_change</ItemText>
         </Ww>
         <Ww>
           <count>4</count>
@@ -211,7 +178,7 @@
         <Ww>
           <count>5</count>
           <WinNumber>1</WinNumber>
-          <ItemText>i2cstatus</ItemText>
+          <ItemText>interupt_pin_press_count</ItemText>
         </Ww>
         <Ww>
           <count>6</count>
@@ -221,7 +188,7 @@
         <Ww>
           <count>7</count>
           <WinNumber>1</WinNumber>
-          <ItemText>status1</ItemText>
+          <ItemText>curr_adc_count</ItemText>
         </Ww>
         <Ww>
           <count>8</count>
@@ -256,7 +223,7 @@
         <Ww>
           <count>14</count>
           <WinNumber>1</WinNumber>
-          <ItemText>max</ItemText>
+          <ItemText>PG_Cntrltest</ItemText>
         </Ww>
         <Ww>
           <count>15</count>
@@ -272,6 +239,11 @@
           <count>17</count>
           <WinNumber>1</WinNumber>
           <ItemText>sTime1</ItemText>
+        </Ww>
+        <Ww>
+          <count>18</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>status1</ItemText>
         </Ww>
       </WatchWindow1>
       <Tracepoint>

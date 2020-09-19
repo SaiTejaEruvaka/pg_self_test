@@ -17,8 +17,8 @@ uint8_t ui8BleRetryCmndCnt;
 const sBLE_NMEA_CMDS_t *sBLECmndBuffer;
 
 UART_HandleTypeDef * huartPtr;
-
-
+extern uint16_t curr_adc_count[7];
+float max_change;
 #ifdef PONDGUARD
 extern I2C_HandleTypeDef hi2c1;
 
@@ -718,91 +718,166 @@ void RTC_Chck()
 }
 void Check_contr_PCB()
 {
+	uint16_t adc_curr=0;
+	uint32_t start_tick = HAL_GetTick();
 	usartTx(CONSOLE_USART,"\r\n\r\n\r\n\r\n\r\n CONTROLLER PCB TESTING STARTED \r\n\r\n");
 	/* Test Flash chip */
 	FlashTest();
 	/* LCD Display */
 	LCDTest();
 	/* Test LoRa chip */
-	LoRaTest();
-	vGPS_Init(); 
+//	LoRaTest();
+//	vGPS_Init(); 
+//	
+//	#ifdef PG2_5
+//	vBLE_Init();
+//	#endif
 	
-	#ifdef PG2_5
-	vBLE_Init();
-	#endif
 	
-	HAL_GPIO_WritePin(POSITION_MOTOR_PORT, POSITION_MOTOR_FWD_PIN,GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(IND_SENSE_GPIO_Port, IND_SENSE_Pin,GPIO_PIN_RESET);
 	HAL_Delay(2);
-	if(!HAL_GPIO_ReadPin(POSITION_MOTOR_PORT,POSITION_MOTOR_REV_PIN))
+	if(!HAL_GPIO_ReadPin(DTCT_SW_GPIO_Port,DTCT_SW_Pin))
 	{
-		PG_Cntrltest.self_test_PGcntrl.pos_motor_for_b = 1;
-		usartTx(CONSOLE_USART,"\r\n Position_motor forward and reverse pins Logic low OK");
+		usartTx(CONSOLE_USART,"\r\n Limit switch and ind sense Logic low OK");
 	}
 	else
 	{
-		usartTx(CONSOLE_USART,"\r\n Position_motor forward and reverse pins Logic low FAIL");
+		usartTx(CONSOLE_USART,"\r\n Limit switch and ind sense Logic low FAIL");
 	}
-	HAL_GPIO_WritePin(POSITION_MOTOR_PORT, POSITION_MOTOR_FWD_PIN,GPIO_PIN_SET);
+	
+	HAL_GPIO_WritePin(IND_SENSE_GPIO_Port, IND_SENSE_Pin,GPIO_PIN_SET);
 	HAL_Delay(2);
-	if(HAL_GPIO_ReadPin(POSITION_MOTOR_PORT,POSITION_MOTOR_REV_PIN))
+	if(HAL_GPIO_ReadPin(DTCT_SW_GPIO_Port,DTCT_SW_Pin))
 	{
-		PG_Cntrltest.self_test_PGcntrl.pos_motor_rev_b = 1;
-		usartTx(CONSOLE_USART,"\r\n Position_motor forward and reverse pins Logic high OK");
+		usartTx(CONSOLE_USART,"\r\n Limit switch and ind sense Logic high OK");
 	}
 	else
 	{
-		usartTx(CONSOLE_USART,"\r\n Position_motor forward and reverse pins Logic high FAIL");
+		usartTx(CONSOLE_USART,"\r\n Limit switch and ind sense Logic high FAIL");
 	}
-	HAL_GPIO_WritePin(ENCODER_INDUC_SENSOR_PWR_CNTRL_PORT, ENCODER_INDUC_SENSOR_PWR_CNTRL_PIN,GPIO_PIN_RESET);
-	HAL_Delay(2);
-	if(!HAL_GPIO_ReadPin(WATER_JET_MOTOR_PORT, WATER_JET_MOTOR_PIN))
-	{
-		PG_Cntrltest.self_test_PGcntrl.water_jet_b = 1;
-		usartTx(CONSOLE_USART,"\r\n Water jet pins and sensor power pins Logic low OK");
-	}
-	else
-	{
-		usartTx(CONSOLE_USART,"\r\n Water jet pins and sensor power pins Logic low FAIL");
-	}
-	HAL_GPIO_WritePin(ENCODER_INDUC_SENSOR_PWR_CNTRL_PORT, ENCODER_INDUC_SENSOR_PWR_CNTRL_PIN,GPIO_PIN_SET);
-	HAL_Delay(2);
-	if(HAL_GPIO_ReadPin(WATER_JET_MOTOR_PORT, WATER_JET_MOTOR_PIN)){
-		PG_Cntrltest.self_test_PGcntrl.sensor_pwr_en_b = 1;
-		usartTx(CONSOLE_USART,"\r\n Water jet pins and sensor power pins Logic high OK");
-	}
-	else {
-		usartTx(CONSOLE_USART,"\r\n Water jet pins and sensor power pins Logic high FAIL");
-	}
-	HAL_GPIO_WritePin(OBJECT_DETECT_BUTTON_PORT, OBJECT_DETECT_BUTTON_PIN,GPIO_PIN_RESET);
-	HAL_Delay(2);
-	if(!HAL_GPIO_ReadPin(INDSENSE_PORT, INDSENSE_PIN))
-	{
-		PG_Cntrltest.self_test_PGcntrl.detect_swt_b = 1;
-		usartTx(CONSOLE_USART,"\r\n Detect switch and Ind sense pins Logic low OK");
-	}
-	else
-	{
-		usartTx(CONSOLE_USART,"\r\n Detect switch and Ind sense pins Logic low FAIL");
-	}
-	HAL_GPIO_WritePin(OBJECT_DETECT_BUTTON_PORT, OBJECT_DETECT_BUTTON_PIN,GPIO_PIN_SET);
-	HAL_Delay(2);
-	if(HAL_GPIO_ReadPin(INDSENSE_PORT, INDSENSE_PIN))
-	{
-		PG_Cntrltest.self_test_PGcntrl.ind_sense_b = 1;
-		usartTx(CONSOLE_USART,"\r\n Detect switch and Ind sense pins Logic high OK");
-	}
-	else
-	{
-		usartTx(CONSOLE_USART,"\r\n Detect switch and Ind sense pins Logic high FAIL");
-	}
-	RTC_Chck();
-	if(PG_Cntrltest.self_test == 0x7FF)
-	{
-		usartTx(CONSOLE_USART,"\r\n\r\n CONTROLLER PCB.............OK");	
-	}
-	else {
-		usartTx(CONSOLE_USART,"\r\n\r\n CONTROLLER PCB.............FAIL");	
-	}
+	
+	usartTx(CONSOLE_USART,"\r\n Moving motor in Forward direction");
+	adc_curr=curr_adc_count[1];
+	HAL_GPIO_WritePin(MOTOR_F_GPIO_Port,MOTOR_F_Pin,GPIO_PIN_SET);
+	HAL_GPIO_WritePin(MOTOR_R_GPIO_Port,MOTOR_R_Pin,GPIO_PIN_RESET);
+	HAL_Delay(1000);
+	start_tick = HAL_GetTick();
+	while((HAL_GetTick() - start_tick) < 4000)
+  {
+		max_change=(curr_adc_count[1]-adc_curr)*0.1*1000*0.0007;
+		if(max_change>6&&max_change<15){//7-20 mA change
+			PG_Cntrltest.self_test_PGcntrl.pos_motor_for_b = 1;
+			usartTx(CONSOLE_USART,"\r\n current check for forward direction ok");
+			break;
+		}
+  }
+	usartTx(CONSOLE_USART,"\r\n Stopping motor");
+	HAL_GPIO_WritePin(MOTOR_R_GPIO_Port,MOTOR_R_Pin,GPIO_PIN_SET);
+	HAL_Delay(2000);
+	usartTx(CONSOLE_USART,"\r\n Moving motor in Reverse direction");
+	HAL_GPIO_WritePin(MOTOR_F_GPIO_Port,MOTOR_F_Pin,GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(MOTOR_R_GPIO_Port,MOTOR_R_Pin,GPIO_PIN_SET);
+	HAL_Delay(1000);
+	start_tick = HAL_GetTick();
+	while((HAL_GetTick() - start_tick) < 4000)
+  {
+		max_change=curr_adc_count[1]-adc_curr;
+		if(max_change>6&&max_change<15){
+			PG_Cntrltest.self_test_PGcntrl.pos_motor_rev_b = 1;
+			usartTx(CONSOLE_USART,"\r\n current check for reverse direction ok");
+			break;
+		}
+  }
+	HAL_GPIO_WritePin(MOTOR_R_GPIO_Port,MOTOR_R_Pin,GPIO_PIN_RESET);
+	
+	usartTx(CONSOLE_USART,"\r\n Water jet started");
+	adc_curr=curr_adc_count[0];
+	HAL_GPIO_WritePin(WATER_JET_EN_GPIO_Port,WATER_JET_EN_Pin,GPIO_PIN_SET);
+	HAL_Delay(2500);
+	start_tick = HAL_GetTick();
+	while((HAL_GetTick() - start_tick) < 4000)
+  {
+		max_change=((curr_adc_count[0]-adc_curr)*0.0007*1000*1000)/264;//in mA
+//		usartTx(CONSOLE_USART,"\r\n %d",max_change);
+		if(max_change>200&&max_change<800){
+			PG_Cntrltest.self_test_PGcntrl.water_jet_b = 1;
+			usartTx(CONSOLE_USART,"\r\n current ok");
+			break;
+		}
+  }
+	HAL_GPIO_WritePin(WATER_JET_EN_GPIO_Port,WATER_JET_EN_Pin,GPIO_PIN_RESET);
+//	HAL_GPIO_WritePin(POSITION_MOTOR_PORT, POSITION_MOTOR_FWD_PIN,GPIO_PIN_RESET);
+//	HAL_Delay(2);
+//	if(!HAL_GPIO_ReadPin(POSITION_MOTOR_PORT,POSITION_MOTOR_REV_PIN))
+//	{
+//		PG_Cntrltest.self_test_PGcntrl.pos_motor_for_b = 1;
+//		usartTx(CONSOLE_USART,"\r\n Position_motor forward and reverse pins Logic low OK");
+//	}
+//	else
+//	{
+//		usartTx(CONSOLE_USART,"\r\n Position_motor forward and reverse pins Logic low FAIL");
+//	}
+//	HAL_GPIO_WritePin(POSITION_MOTOR_PORT, POSITION_MOTOR_FWD_PIN,GPIO_PIN_SET);
+//	HAL_Delay(2);
+//	if(HAL_GPIO_ReadPin(POSITION_MOTOR_PORT,POSITION_MOTOR_REV_PIN))
+//	{
+//		PG_Cntrltest.self_test_PGcntrl.pos_motor_rev_b = 1;
+//		usartTx(CONSOLE_USART,"\r\n Position_motor forward and reverse pins Logic high OK");
+//	}
+//	else
+//	{
+//		usartTx(CONSOLE_USART,"\r\n Position_motor forward and reverse pins Logic high FAIL");
+//	}
+//	HAL_GPIO_WritePin(ENCODER_INDUC_SENSOR_PWR_CNTRL_PORT, ENCODER_INDUC_SENSOR_PWR_CNTRL_PIN,GPIO_PIN_RESET);
+//	HAL_Delay(2);
+//	if(!HAL_GPIO_ReadPin(WATER_JET_MOTOR_PORT, WATER_JET_MOTOR_PIN))
+//	{
+//		PG_Cntrltest.self_test_PGcntrl.water_jet_b = 1;
+//		usartTx(CONSOLE_USART,"\r\n Water jet pins and sensor power pins Logic low OK");
+//	}
+//	else
+//	{
+//		usartTx(CONSOLE_USART,"\r\n Water jet pins and sensor power pins Logic low FAIL");
+//	}
+//	HAL_GPIO_WritePin(ENCODER_INDUC_SENSOR_PWR_CNTRL_PORT, ENCODER_INDUC_SENSOR_PWR_CNTRL_PIN,GPIO_PIN_SET);
+//	HAL_Delay(2);
+//	if(HAL_GPIO_ReadPin(WATER_JET_MOTOR_PORT, WATER_JET_MOTOR_PIN)){
+//		PG_Cntrltest.self_test_PGcntrl.sensor_pwr_en_b = 1;
+//		usartTx(CONSOLE_USART,"\r\n Water jet pins and sensor power pins Logic high OK");
+//	}
+//	else {
+//		usartTx(CONSOLE_USART,"\r\n Water jet pins and sensor power pins Logic high FAIL");
+//	}
+//	HAL_GPIO_WritePin(OBJECT_DETECT_BUTTON_PORT, OBJECT_DETECT_BUTTON_PIN,GPIO_PIN_RESET);
+//	HAL_Delay(2);
+//	if(!HAL_GPIO_ReadPin(INDSENSE_PORT, INDSENSE_PIN))
+//	{
+//		PG_Cntrltest.self_test_PGcntrl.detect_swt_b = 1;
+//		usartTx(CONSOLE_USART,"\r\n Detect switch and Ind sense pins Logic low OK");
+//	}
+//	else
+//	{
+//		usartTx(CONSOLE_USART,"\r\n Detect switch and Ind sense pins Logic low FAIL");
+//	}
+//	HAL_GPIO_WritePin(OBJECT_DETECT_BUTTON_PORT, OBJECT_DETECT_BUTTON_PIN,GPIO_PIN_SET);
+//	HAL_Delay(2);
+//	if(HAL_GPIO_ReadPin(INDSENSE_PORT, INDSENSE_PIN))
+//	{
+//		PG_Cntrltest.self_test_PGcntrl.ind_sense_b = 1;
+//		usartTx(CONSOLE_USART,"\r\n Detect switch and Ind sense pins Logic high OK");
+//	}
+//	else
+//	{
+//		usartTx(CONSOLE_USART,"\r\n Detect switch and Ind sense pins Logic high FAIL");
+//	}
+//	RTC_Chck();
+//	if(PG_Cntrltest.self_test == 0x7FF)
+//	{
+//		usartTx(CONSOLE_USART,"\r\n\r\n CONTROLLER PCB.............OK");	
+//	}
+//	else {
+//		usartTx(CONSOLE_USART,"\r\n\r\n CONTROLLER PCB.............FAIL");	
+//	}
 }
 void chck_ldCurr()
 {
@@ -942,8 +1017,8 @@ void PGTest()
 //		ModifdreadADSSensor();
 //		usartTx(CONSOLE_USART, "\r\n Modified Temperature: %.2f deg\r\n",ModgetTemperatureValueFromADS());
 //	}
-	Check_DOI2C_PCB();
-	HAL_Delay(50); 	  
+//	Check_DOI2C_PCB();
+//	HAL_Delay(50); 	  
 //	Cntrl_GPIO_Config();
 	Check_contr_PCB(); 
 //	CheckADSSensor(); 

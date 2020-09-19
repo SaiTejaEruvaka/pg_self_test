@@ -16,6 +16,7 @@ extern UART_HandleTypeDef huart1;
 extern UART_HandleTypeDef huart2;
 extern UART_HandleTypeDef huart3;
 char usart_buffer[50];
+extern uint8_t recv_buffer[50];
 
 extern char lora_uart_buff[LORA_BUF_SIZE];
 extern sBLE_RX_BUFF_t sBLErxBuff;
@@ -68,6 +69,9 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 		HAL_UART_Receive_IT(&huart3,sBLErxBuff.ui8DataBuff,MAX_BLE_RX_BUFFER_SIZE);	
 	}
 	#endif
+	else if(huart==&huart1){
+		HAL_UART_Receive_IT(&huart1,recv_buffer,sizeof(recv_buffer));
+	}
 }
 
 void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
@@ -86,6 +90,9 @@ void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
 			HAL_UART_Receive_IT(&hlpuart1,sGPSrxBuff.ui8DataBuff,MAX_GPS_RX_BUFFER_SIZE);
 			usartTx(CONSOLE_USART,(const char *)"\r\n Error hlpuart1");
     }
+		else if(huart==&huart1){
+			HAL_UART_Receive_IT(&huart1,recv_buffer,sizeof(recv_buffer));
+		}
 		#endif
 }
 	

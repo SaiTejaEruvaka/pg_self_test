@@ -45,6 +45,8 @@
 #include "FlashTest.h"
 #include "LoRaTest.h"
 #include "PGTest.h"
+#include "uart.h"
+#include <string.h>
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
@@ -94,7 +96,7 @@ static void MX_LPUART1_UART_Init(void);
 extern uint8_t RTC_AlarmEvntflag;
 
 
-	uint8_t recv_buffer[10];
+	uint8_t recv_buffer[50];
 	uint8_t ble_buffer[100];
 	uint8_t lora_buffer[100];
 	uint8_t gps_buffer[100];
@@ -116,6 +118,8 @@ extern uint8_t RTC_AlarmEvntflag;
 	int i32Encoder_Value;
 HAL_StatusTypeDef i2cStatus;
 	uint16_t adc_value[7];
+	uint32_t cumm_value[7];
+	uint16_t curr_adc_count[7];
 	float conv_adc_value[7];
 	RTC_TimeTypeDef sTime;
 	RTC_DateTypeDef sDate;
@@ -162,7 +166,9 @@ int main(void)
   MX_ADC1_Init();
   MX_LPUART1_UART_Init();
   /* USER CODE BEGIN 2 */
-	
+	usartTx(CONSOLE_USART,(const char *)"Enter 'start' to proceed\r\n");
+//	while(strstr((const char *)recv_buffer,(const char *)"start")!=NULL);
+
 	/*
 	HAL_GPIO_WritePin(GPS_PWR_EN_GPIO_Port, GPS_PWR_EN_Pin, GPIO_PIN_RESET);
 	HAL_Delay(500);
@@ -193,18 +199,18 @@ int main(void)
 	HAL_ADC_Start_DMA(&hadc1,(uint32_t*)adc_value,7);
 //	HAL_GPIO_WritePin(SENS_PWR_CTRL_GPIO_Port,SENS_PWR_CTRL_Pin,GPIO_PIN_SET);
 	HAL_GPIO_WritePin(LCD_BACKLIGHT_GPIO_Port,LCD_BACKLIGHT_Pin,GPIO_PIN_SET);
-	i2cStatus = I2C_MCP3021_Access(MCP3021_I2C_ADDRESS,&i32Encoder_Value);
-	ret=HAL_I2C_Master_Receive(&hi2c1,0xAA,i2c_data,sizeof(i2c_data),5000);
-	ret=HAL_I2C_Master_Receive(&hi2c1,0x9F,i2c_data,sizeof(i2c_data),5000);
+//	i2cStatus = I2C_MCP3021_Access(MCP3021_I2C_ADDRESS,&i32Encoder_Value);
+//	ret=HAL_I2C_Master_Receive(&hi2c1,0xAA,i2c_data,sizeof(i2c_data),5000);
+//	ret=HAL_I2C_Master_Receive(&hi2c1,0x9F,i2c_data,sizeof(i2c_data),5000);
 //	HAL_GPIO_WritePin(WATER_JET_EN_GPIO_Port,WATER_JET_EN_Pin,GPIO_PIN_SET);
-	HAL_GPIO_WritePin(GPIOA,GPIO_PIN_8,GPIO_PIN_RESET);
-	HAL_GPIO_WritePin(MOTOR_F_GPIO_Port,MOTOR_F_Pin,GPIO_PIN_SET);
-	HAL_GPIO_WritePin(MOTOR_R_GPIO_Port,MOTOR_R_Pin,GPIO_PIN_RESET);
-	HAL_Delay(5000);
-	HAL_GPIO_WritePin(MOTOR_R_GPIO_Port,MOTOR_R_Pin,GPIO_PIN_SET);
-	HAL_Delay(1000);
-	HAL_GPIO_WritePin(MOTOR_F_GPIO_Port,MOTOR_F_Pin,GPIO_PIN_RESET);
-	HAL_GPIO_WritePin(MOTOR_R_GPIO_Port,MOTOR_R_Pin,GPIO_PIN_SET);
+//	HAL_GPIO_WritePin(GPIOA,GPIO_PIN_8,GPIO_PIN_RESET);
+//	HAL_GPIO_WritePin(MOTOR_F_GPIO_Port,MOTOR_F_Pin,GPIO_PIN_SET);
+//	HAL_GPIO_WritePin(MOTOR_R_GPIO_Port,MOTOR_R_Pin,GPIO_PIN_RESET);
+//	HAL_Delay(5000);
+//	HAL_GPIO_WritePin(MOTOR_R_GPIO_Port,MOTOR_R_Pin,GPIO_PIN_SET);
+//	HAL_Delay(1000);
+//	HAL_GPIO_WritePin(MOTOR_F_GPIO_Port,MOTOR_F_Pin,GPIO_PIN_RESET);
+//	HAL_GPIO_WritePin(MOTOR_R_GPIO_Port,MOTOR_R_Pin,GPIO_PIN_SET);
 //	sTime.Hours=11;
 //	sTime.Minutes=53;
 //	sTime.Seconds=45;
@@ -360,7 +366,7 @@ static void MX_ADC1_Init(void)
     */
   sConfig.Channel = ADC_CHANNEL_3;
   sConfig.Rank = ADC_REGULAR_RANK_1;
-  sConfig.SamplingTime = ADC_SAMPLETIME_247CYCLES_5;
+  sConfig.SamplingTime = ADC_SAMPLETIME_92CYCLES_5;
   sConfig.SingleDiff = ADC_SINGLE_ENDED;
   sConfig.OffsetNumber = ADC_OFFSET_NONE;
   sConfig.Offset = 0;
@@ -795,27 +801,27 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
   if(GPIO_Pin==M1_PUSH_DB_Pin){
 		interupt_pin_press_count[0]++;
-		lcd_click_status = UP_CLICK_EVENT;
+		lcd_click_status = TRAIL_RUN;//UP_CLICK_EVENT;
 		LCDClickevent = 1;
 	}
 	else if(GPIO_Pin==M2_PUSH_DB_Pin){
 		interupt_pin_press_count[1]++;
-		lcd_click_status = DOWN_CLICK_EVENT;
+		lcd_click_status = BACK_CLICK_EVENT;//DOWN_CLICK_EVENT;
 		LCDClickevent = 1;
 	}
 	else if(GPIO_Pin==M3_PUSH_DB_Pin){
 		interupt_pin_press_count[2]++;
-		lcd_click_status = MENU_CLICK_EVENT;
+		lcd_click_status = DOWN_CLICK_EVENT;//MENU_CLICK_EVENT;
 		LCDClickevent = 1;
 	}
 	else if(GPIO_Pin==M4_PUSH_DB_Pin){
 		interupt_pin_press_count[3]++;
-		lcd_click_status = BACK_CLICK_EVENT;
+		lcd_click_status = DOWN_CLICK_EVENT;
 		LCDClickevent = 1;
 	}
 	else if(GPIO_Pin==TRAIL_REQ_Pin){
 		interupt_pin_press_count[4]++;
-		lcd_click_status = TRAIL_RUN;
+		lcd_click_status = MENU_CLICK_EVENT;
 		LCDClickevent = 1;
 	}
 	else{
@@ -827,15 +833,27 @@ uint16_t max=0;
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc)
 {
 	//INA Vo=(Is*Rs*Rl)/5K
+	static uint16_t sample_count=0;
   if(hadc==&hadc1){
+//		for(int i=0;i<7;i++){
+//			if(i==0){
+//				if(adc_value[0]>max){
+//					max=adc_value[0];
+//				}
+//			}
+//			conv_adc_value[i]=(adc_value[i]*0.00073);//(3/4095))/264
+//		}
 		for(int i=0;i<7;i++){
-			if(i==0){
-				if(adc_value[0]>max){
-					max=adc_value[0];
-				}
+			cumm_value[i]+=adc_value[i];
+			if(sample_count==100){
+				curr_adc_count[i]=cumm_value[i]/100;
+				cumm_value[i]=0;
+				if(i==6)
+					sample_count=0;
 			}
-			conv_adc_value[i]=(adc_value[i]*(float)(3/4095))/264;
 		}
+		sample_count++;
+		
 	}
 }
 /* USER CODE END 4 */
