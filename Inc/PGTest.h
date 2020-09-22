@@ -71,15 +71,15 @@ typedef union self_test_PGcntrl_u
 		uint16_t	pos_motor_for_b:1;
 		uint16_t	pos_motor_rev_b:1;
 		uint16_t	water_jet_b:1;
-		uint16_t	sensor_pwr_en_b:1;
 		uint16_t	detect_swt_b:1;
 		uint16_t	ind_sense_b:1;
-    uint16_t	ADC128_comm_b:1;
 		uint16_t	LoRa_comm_b:1;
 		uint16_t	GPS_comm_b:1;
 		uint16_t  BLE_comm_b:1;
 		uint16_t	flash_b:1;
 		uint16_t	rtc_b:1;
+		uint16_t	ADC128_comm_b:1;
+		uint16_t	sensor_pwr_en_b:1;
 	}self_test_PGcntrl;
 	
 }self_test_PG_Cntrl_t;
