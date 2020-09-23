@@ -78,6 +78,8 @@ typedef union self_test_PGcntrl_u
 		uint16_t  BLE_comm_b:1;
 		uint16_t	flash_b:1;
 		uint16_t	rtc_b:1;
+//		uint16_t	ADC_BAT:1;
+//		uint16_t	ADC_SOL:1;
 		uint16_t	ADC128_comm_b:1;
 		uint16_t	sensor_pwr_en_b:1;
 	}self_test_PGcntrl;

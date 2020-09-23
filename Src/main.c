@@ -96,7 +96,7 @@ static void MX_LPUART1_UART_Init(void);
 extern uint8_t RTC_AlarmEvntflag;
 
 
-	uint8_t recv_buffer[50];
+	uint8_t recv_buffer[100];
 	uint8_t ble_buffer[100];
 	uint8_t lora_buffer[100];
 	uint8_t gps_buffer[100];
@@ -125,6 +125,7 @@ HAL_StatusTypeDef i2cStatus;
 	RTC_DateTypeDef sDate;
 	uint32_t val=0;
 	GPIO_PinState abc;
+	uint32_t start_time;
 /* USER CODE END 0 */
 
 /**
@@ -167,7 +168,8 @@ int main(void)
   MX_LPUART1_UART_Init();
   /* USER CODE BEGIN 2 */
 	usartTx(CONSOLE_USART,(const char *)"Enter 'start' to proceed\r\n");
-//	while(strstr((const char *)recv_buffer,(const char *)"start")!=NULL);
+	HAL_UART_Receive_IT(&huart1,recv_buffer,sizeof(recv_buffer));
+	while(strstr((const char *)recv_buffer,(const char *)"start")==NULL);
 
 	/*
 	HAL_GPIO_WritePin(GPS_PWR_EN_GPIO_Port, GPS_PWR_EN_Pin, GPIO_PIN_RESET);
@@ -197,7 +199,7 @@ int main(void)
 	*/
 	
 	HAL_ADC_Start_DMA(&hadc1,(uint32_t*)adc_value,7);
-	HAL_GPIO_WritePin(SENS_PWR_CTRL_GPIO_Port,SENS_PWR_CTRL_Pin,GPIO_PIN_SET);
+//	HAL_GPIO_WritePin(SENS_PWR_CTRL_GPIO_Port,SENS_PWR_CTRL_Pin,GPIO_PIN_SET);
 	HAL_GPIO_WritePin(LCD_BACKLIGHT_GPIO_Port,LCD_BACKLIGHT_Pin,GPIO_PIN_SET);
 //	i2cStatus = I2C_MCP3021_Access(MCP3021_I2C_ADDRESS,&i32Encoder_Value);
 //	ret=HAL_I2C_Master_Receive(&hi2c1,0xAA,i2c_data,sizeof(i2c_data),5000);
@@ -221,7 +223,7 @@ int main(void)
 //	LCDTest();
 //	LoRaTest();
 	PGTest();
-
+	start_time=HAL_GetTick();
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -238,6 +240,11 @@ int main(void)
 		HAL_Delay(1000);
 		abc=HAL_GPIO_ReadPin(DTCT_SW_GPIO_Port,DTCT_SW_Pin);
 		SWTest();
+		if(HAL_GetTick()-start_time>=1000){
+			HAL_GPIO_TogglePin(SENS_PWR_CTRL_GPIO_Port,SENS_PWR_CTRL_Pin);
+			start_time=HAL_GetTick();
+		}
+		
   }
   /* USER CODE END 3 */
 
@@ -812,7 +819,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 	}
 	else if(GPIO_Pin==M3_PUSH_DB_Pin){
 		interupt_pin_press_count[2]++;
-		lcd_click_status = DOWN_CLICK_EVENT;//MENU_CLICK_EVENT;
+		lcd_click_status = UP_CLICK_EVENT;//MENU_CLICK_EVENT;
 		LCDClickevent = 1;
 	}
 	else if(GPIO_Pin==M4_PUSH_DB_Pin){

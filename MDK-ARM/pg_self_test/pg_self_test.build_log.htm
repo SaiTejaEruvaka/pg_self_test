@@ -5,9 +5,10 @@
 <h2>Tool Versions:</h2>
 IDE-Version: µVision V5.25.2.0
 Copyright (C) 2018 ARM Ltd and ARM Germany GmbH. All rights reserved.
-License Information: Sai Teja HP Inc. Flex license: error obtaining information 
+License Information: Sai Teja HP Inc. Flex license: MDK-ARM Essential: 1 user(s) (mdk_essential) Support: Jun 2019
+ 
 Tool Versions:
-Toolchain:       MDK-Lite  Version: 5.25.2.0
+Toolchain:       MDK-ARM Essential: 1 user(s)  Version: 5.25.2.0
 Toolchain Path:  C:\Keil_v5\ARM\ARMCC\Bin
 C Compiler:      Armcc.exe V5.06 update 6 (build 750)
 Assembler:       Armasm.exe V5.06 update 6 (build 750)
@@ -51,17 +52,23 @@ compiling PGTest.c...
   		if(fSlfCleanMotorCurrent_mA >= 8.5 && fSlfCleanMotorCurrent_mA <= 30) 
 ..\Src\PGTest.c(601): warning:  #1035-D: single-precision operand implicitly converted to double-precision
   	vref = ((vref *24.7)/4.7);   /* Resistor divider calculation */
-..\Src\PGTest.c(902): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+..\Src\PGTest.c(890): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+  	if(max_change>10.5&&max_change<12.5){
+..\Src\PGTest.c(890): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+  	if(max_change>10.5&&max_change<12.5){
+..\Src\PGTest.c(898): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+  	if(max_change>4&&max_change<6.5){
+..\Src\PGTest.c(943): warning:  #1035-D: single-precision operand implicitly converted to double-precision
   			Loadcurravg_fl = (Loadcurravg_fl/CHRG_CURRENT_LOAD_RESISTOR);
-..\Src\PGTest.c(949): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+..\Src\PGTest.c(990): warning:  #1035-D: single-precision operand implicitly converted to double-precision
   			fSlfCleanMotorCurrent_mA = fSlfCleanMotorCurrent_mA/CHRG_CURRENT_LOAD_RESISTOR;
-..\Src\PGTest.c(962): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+..\Src\PGTest.c(1003): warning:  #1035-D: single-precision operand implicitly converted to double-precision
   			fSlfCleanMotorCurrent_mA = fSlfCleanMotorCurrent_mA/CHRG_CURRENT_LOAD_RESISTOR;
-..\Src\PGTest.c: 15 warnings, 0 errors
+..\Src\PGTest.c: 18 warnings, 0 errors
 linking...
-Program Size: Code=24160 RO-data=1240 RW-data=132 ZI-data=3676  
+Program Size: Code=24916 RO-data=1336 RW-data=136 ZI-data=3720  
 FromELF: creating hex file...
-"pg_self_test\pg_self_test.axf" - 0 Error(s), 15 Warning(s).
+"pg_self_test\pg_self_test.axf" - 0 Error(s), 18 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -84,7 +91,7 @@ Package Vendor: Keil
 <h2>Collection of Component Files used:</h2>
 
    * Component: ARM::CMSIS:CORE:5.4.0
-Build Time Elapsed:  00:00:04
+Build Time Elapsed:  00:00:05
 </pre>
 </body>
 </html>

@@ -16,7 +16,7 @@ extern UART_HandleTypeDef huart1;
 extern UART_HandleTypeDef huart2;
 extern UART_HandleTypeDef huart3;
 char usart_buffer[50];
-extern uint8_t recv_buffer[50];
+extern uint8_t recv_buffer[100];
 
 extern char lora_uart_buff[LORA_BUF_SIZE];
 extern sBLE_RX_BUFF_t sBLErxBuff;
@@ -91,6 +91,7 @@ void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
 			usartTx(CONSOLE_USART,(const char *)"\r\n Error hlpuart1");
     }
 		else if(huart==&huart1){
+			usartTx(CONSOLE_USART,(const char *)"\r\n Error UART1");
 			HAL_UART_Receive_IT(&huart1,recv_buffer,sizeof(recv_buffer));
 		}
 		#endif

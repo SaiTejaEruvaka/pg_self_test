@@ -672,7 +672,7 @@ void vGPS_Init(){
 
 void vSendBLECommands(const sBLE_NMEA_CMDS_t *cmndsBuff,uint8_t ui8NoOfCmnds){
 	sBLECmndBuffer = cmndsBuff;
-	usartTx(CONSOLE_USART,(const char *)"\r\nBLE Cmd.........%s",(uint8_t *)sBLECmndBuffer->CmndString);
+//	usartTx(CONSOLE_USART,(const char *)"\r\nBLE Cmd.........%s",(uint8_t *)sBLECmndBuffer->CmndString);
 	HAL_UART_Transmit(&huart3,(uint8_t *)sBLECmndBuffer->CmndString,strlen(sBLECmndBuffer->CmndString),1000);
 }
 
@@ -767,10 +767,13 @@ void Check_contr_PCB()
 //	while((HAL_GetTick() - start_tick) < 4000)
 //  {
 		max_change=(curr_adc_count[1]-adc_curr)*0.1*1000*0.0007;
-		if(max_change>6&&max_change<15){//7-20 mA change
+		if(max_change>6&&max_change<20){//7-20 mA change
 			PG_Cntrltest.self_test_PGcntrl.pos_motor_for_b = 1;
 			usartTx(CONSOLE_USART,"\r\n current check for forward direction ok");
 //			break;
+		}
+		else{
+			usartTx(CONSOLE_USART,"\r\n current check for forward direction Fail");
 		}
 //  }
 	usartTx(CONSOLE_USART,"\r\n Stopping motor");
@@ -783,11 +786,14 @@ void Check_contr_PCB()
 //	start_tick = HAL_GetTick();
 //	while((HAL_GetTick() - start_tick) < 4000)
 //  {
-		max_change=curr_adc_count[1]-adc_curr;
-		if(max_change>6&&max_change<15){
+		max_change=(curr_adc_count[1]-adc_curr)*0.1*1000*0.0007;
+		if(max_change>6&&max_change<20){
 			PG_Cntrltest.self_test_PGcntrl.pos_motor_rev_b = 1;
 			usartTx(CONSOLE_USART,"\r\n current check for reverse direction ok");
 //			break;
+		}
+		else{
+			usartTx(CONSOLE_USART,"\r\n current check for reverse direction Fail");
 		}
 //  }
 	HAL_GPIO_WritePin(MOTOR_R_GPIO_Port,MOTOR_R_Pin,GPIO_PIN_RESET);
@@ -801,10 +807,13 @@ void Check_contr_PCB()
 //  {
 		max_change=((curr_adc_count[0]-adc_curr)*0.0007*1000*1000)/264;//in mA
 //		usartTx(CONSOLE_USART,"\r\n %d",max_change);
-		if(max_change>200&&max_change<800){
+		if(max_change>200&&max_change<1500){
 			PG_Cntrltest.self_test_PGcntrl.water_jet_b = 1;
-			usartTx(CONSOLE_USART,"\r\n current ok");
+			usartTx(CONSOLE_USART,"\r\n Water jet current check ok");
 //			break;
+		}
+		else{
+			usartTx(CONSOLE_USART,"\r\n Water jet current check Fail");
 		}
 //  }
 	HAL_GPIO_WritePin(WATER_JET_EN_GPIO_Port,WATER_JET_EN_Pin,GPIO_PIN_RESET);
@@ -872,14 +881,46 @@ void Check_contr_PCB()
 //	{
 //		usartTx(CONSOLE_USART,"\r\n Detect switch and Ind sense pins Logic high FAIL");
 //	}
+	max_change=curr_adc_count[3]*0.0007*6;//BAT voltage
+//	start_tick=HAL_GetTick();
+//	while(HAL_GetTick()-start_tick<20000){
+//		max_change=curr_adc_count[3]*0.0007*6;//SOL voltage
+//		usartTx(CONSOLE_USART,"\r\n%f",max_change);
+//	}
+	if(max_change>10.5&&max_change<12.5){
+		PG_Cntrltest.self_test_PGcntrl.ADC128_comm_b=1;
+		usartTx(CONSOLE_USART,"\r\n Battery Voltage check ok");
+	}
+	else{
+		usartTx(CONSOLE_USART,"\r\n Battery Voltage check fail");
+	}
+	max_change=curr_adc_count[4]*0.0007*11;//SOL voltage
+	if(max_change>4&&max_change<6.5){
+		PG_Cntrltest.self_test_PGcntrl.sensor_pwr_en_b=1;
+			usartTx(CONSOLE_USART,"\r\n Solar Voltage check ok");
+			usartTx(CONSOLE_USART,"\r\n At floating solar voltage should be in between 4 to 6 V");
+	}
+	else{
+		usartTx(CONSOLE_USART,"\r\n Solar Voltage check fail");
+	}
+//	start_tick=HAL_GetTick();
+//	while(HAL_GetTick()-start_tick<20000){
+//		max_change=curr_adc_count[4]*0.0007*11;//SOL voltage
+//		usartTx(CONSOLE_USART,"\r\n%f",max_change);
+//	}
 	RTC_Chck();
-	if(PG_Cntrltest.self_test == 0x3FF)
+	if(PG_Cntrltest.self_test == 0xFFF)
 	{
 		usartTx(CONSOLE_USART,"\r\n\r\n CONTROLLER PCB.............OK");	
 	}
 	else {
 		usartTx(CONSOLE_USART,"\r\n\r\n CONTROLLER PCB.............FAIL\r\n code:%x",PG_Cntrltest.self_test);	
 	}
+	usartTx(CONSOLE_USART,"\r\n\r\n Manual Check\r\n LED should be blinking");
+	usartTx(CONSOLE_USART,"\r\n LCD should display 'ERUVAKA TECHNOLOGIES'");
+	usartTx(CONSOLE_USART,"\r\n LCD backlight shall glow in white color");
+	usartTx(CONSOLE_USART,"\r\n Press the keypad and check the corresponding response on LCD to check whether it is working");
+	
 }
 void chck_ldCurr()
 {
