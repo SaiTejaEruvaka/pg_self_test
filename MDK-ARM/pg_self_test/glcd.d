@@ -1,5 +1,6 @@
 pg_self_test\glcd.o: ..\Src\glcd.c
 pg_self_test\glcd.o: ../Inc/main.h
+pg_self_test\glcd.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 pg_self_test\glcd.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h
 pg_self_test\glcd.o: ../Inc/stm32l4xx_hal_conf.h
 pg_self_test\glcd.o: ../Inc/main.h
@@ -39,6 +40,12 @@ pg_self_test\glcd.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_spi.h
 pg_self_test\glcd.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_spi_ex.h
 pg_self_test\glcd.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart.h
 pg_self_test\glcd.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart_ex.h
+pg_self_test\glcd.o: ../Inc/uart.h
+pg_self_test\glcd.o: ../Inc/LoRaTest.h
+pg_self_test\glcd.o: ../Inc/FlashTest.h
+pg_self_test\glcd.o: ../Inc/adc.h
+pg_self_test\glcd.o: ../Inc/PMTest.h
+pg_self_test\glcd.o: ../Inc/LCDTest.h
 pg_self_test\glcd.o: ../Inc/glcd.h
 pg_self_test\glcd.o: ../Inc/ST7565R.h
 pg_self_test\glcd.o: ../Inc/glcd_devices.h

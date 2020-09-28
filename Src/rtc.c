@@ -33,7 +33,7 @@
   */
 
 /* Includes ------------------------------------------------------------------*/
-#ifdef PONDGUARD
+//#ifdef PONDGUARD
 #include "rtc.h"
 #include "uart.h"
 /* USER CODE BEGIN 0 */
@@ -185,4 +185,4 @@ uint32_t PLATFORM_RTC_get_expiry(void)
   */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
-#endif
+//#endif

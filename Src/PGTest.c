@@ -14,12 +14,12 @@ extern char LCD[LCD_MAX_LINES][LINE_SIZE + 1];
 uint32_t TempLCDUpdTimout = RESET;
 uint8_t ui8CmndsToBeSent;
 uint8_t ui8BleRetryCmndCnt;
-const sBLE_NMEA_CMDS_t *sBLECmndBuffer;
 
 UART_HandleTypeDef * huartPtr;
 extern uint16_t curr_adc_count[7];
 float max_change;
 #ifdef PONDGUARD
+const sBLE_NMEA_CMDS_t *sBLECmndBuffer;
 extern I2C_HandleTypeDef hi2c1;
 
 const sBLE_NMEA_CMDS_t sBLEInitCmnds[] = {{ "AT\r\n", "OK", NULL }};

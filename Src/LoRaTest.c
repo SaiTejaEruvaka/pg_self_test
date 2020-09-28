@@ -37,9 +37,9 @@ static void HopeRF_LoRaTest(void);
     HAL_Delay(500);
     HAL_GPIO_WritePin(LORA_RST_GPIO_Port, LORA_RST_Pin, GPIO_PIN_SET);
 		#ifndef LORA_CHANGES
-		HAL_Delay(1000);
+		HAL_Delay(210);
 		#else
-		HAL_Delay(330);
+		HAL_Delay(1000);
 		#endif
 		data_len = LoRaRx();
 		if(data_len > 0)
@@ -47,9 +47,9 @@ static void HopeRF_LoRaTest(void);
 				usartTx(CONSOLE_USART,(const char *)"LORA CHIP.........%s\r\n",lora_data_buff);
 				usartTx(LORA_USART,(const char *)MCHIP_CMD("mac pause\r"));
 		    #ifndef LORA_CHANGES
-				HAL_Delay(20);
+				HAL_Delay(500);
 		    #else
-		    HAL_Delay(10);
+		    HAL_Delay(1000);
 		    #endif
 				data_len = LoRaRx();
 				if((data_len > 0) && (strcmp(lora_data_buff,"4294967245\r") == 0))

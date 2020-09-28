@@ -126,6 +126,7 @@ HAL_StatusTypeDef i2cStatus;
 	uint32_t val=0;
 	GPIO_PinState abc;
 	uint32_t start_time;
+	extern sBLE_RX_BUFF_t sBLErxBuff;
 /* USER CODE END 0 */
 
 /**
@@ -136,7 +137,7 @@ HAL_StatusTypeDef i2cStatus;
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-//499 or 100 ohm
+//499 or 100K ohm
   /* USER CODE END 1 */
 
   /* MCU Configuration----------------------------------------------------------*/
@@ -163,14 +164,20 @@ int main(void)
   MX_USART2_UART_Init();
   MX_SPI1_Init(SPI_DIRECTION_2LINES);
   MX_RTC_Init();
+  #ifdef PONDGUARD
   MX_I2C1_Init();
+  #endif
   MX_ADC1_Init();
   MX_LPUART1_UART_Init();
   /* USER CODE BEGIN 2 */
+  	usartTx(CONSOLE_USART,(const char *)"Completed Initialization.......\r\n");
 	usartTx(CONSOLE_USART,(const char *)"Enter 'start' to proceed\r\n");
 	HAL_UART_Receive_IT(&huart1,recv_buffer,sizeof(recv_buffer));
-	while(strstr((const char *)recv_buffer,(const char *)"start")==NULL);
+//	while(strstr((const char *)recv_buffer,(const char *)"start")==NULL);
 
+	HAL_Delay(100);
+	usartTx(CONSOLE_USART,(const char *)"Self Testing started.......\r\n");
+	
 	/*
 	HAL_GPIO_WritePin(GPS_PWR_EN_GPIO_Port, GPS_PWR_EN_Pin, GPIO_PIN_RESET);
 	HAL_Delay(500);
@@ -197,10 +204,23 @@ int main(void)
 	
 	HAL_UART_Receive_IT(&huart2,lora_buffer,sizeof(lora_buffer));
 	*/
+//	HAL_UART_Receive_IT(&huart3,ble_buffer,sizeof(ble_buffer));
+////	HAL_UART_Receive_IT(&huart3,sBLErxBuff.ui8DataBuff,MAX_BLE_RX_BUFFER_SIZE);
+//	HAL_GPIO_WritePin(BT_PWR_EN_GPIO_Port,BT_PWR_EN_Pin,GPIO_PIN_SET);
+//	HAL_Delay(10);
+//	HAL_GPIO_WritePin(BT_PWR_EN_GPIO_Port,BT_PWR_EN_Pin,GPIO_PIN_RESET);
+//	
+//	HAL_Delay(500);
+//	HAL_UART_Transmit(&huart3,(uint8_t*)"AT\r\n",4,1000);
+//	HAL_Delay(5000);
+//	HAL_UART_Transmit(&huart3,(uint8_t*)"AT+CGMM\r\n",9,1000);
+//	HAL_Delay(500);
+//	HAL_UART_Transmit(&huart3,(uint8_t*)"AT\r\n",4,1000);
 	
-	HAL_ADC_Start_DMA(&hadc1,(uint32_t*)adc_value,7);
+//	HAL_ADC_Start_DMA(&hadc1,(uint32_t*)adc_value,4);
 //	HAL_GPIO_WritePin(SENS_PWR_CTRL_GPIO_Port,SENS_PWR_CTRL_Pin,GPIO_PIN_SET);
 	HAL_GPIO_WritePin(LCD_BACKLIGHT_GPIO_Port,LCD_BACKLIGHT_Pin,GPIO_PIN_SET);
+//	HAL_UART_DeInit(&huart3);
 //	i2cStatus = I2C_MCP3021_Access(MCP3021_I2C_ADDRESS,&i32Encoder_Value);
 //	ret=HAL_I2C_Master_Receive(&hi2c1,0xAA,i2c_data,sizeof(i2c_data),5000);
 //	ret=HAL_I2C_Master_Receive(&hi2c1,0x9F,i2c_data,sizeof(i2c_data),5000);
@@ -218,11 +238,22 @@ int main(void)
 //	sTime.Seconds=45;
 //	
 //	HAL_RTC_SetTime(&hrtc,&sTime,RTC_FORMAT_BIN);
-	val=HAL_RTCEx_BKUPRead(&hrtc,12);
-//	FlashTest();
-//	LCDTest();
-//	LoRaTest();
+//	val=HAL_RTCEx_BKUPRead(&hrtc,12);
+////	FlashTest();
+////	LCDTest();
+////	LoRaTest();
+	#ifdef PONDGUARD
 	PGTest();
+	#elif PONDMOTHER
+	FlashTest();
+	LCDTest();
+	LoRaTest();
+	ADCTest();
+	
+	PMTest();
+	#endif
+
+
 	start_time=HAL_GetTick();
   /* USER CODE END 2 */
 
@@ -235,15 +266,16 @@ int main(void)
 
   /* USER CODE BEGIN 3 */
 //		HAL_UART_Transmit(&huart1,(uint8_t*)"Hello\r\n",8,1000);
-		HAL_RTC_GetTime(&hrtc,&sTime,RTC_FORMAT_BIN);
-		HAL_RTC_GetDate(&hrtc,&sDate,RTC_FORMAT_BIN);
-		HAL_Delay(1000);
-		abc=HAL_GPIO_ReadPin(DTCT_SW_GPIO_Port,DTCT_SW_Pin);
+//		HAL_RTC_GetTime(&hrtc,&sTime,RTC_FORMAT_BIN);
+//		HAL_RTC_GetDate(&hrtc,&sDate,RTC_FORMAT_BIN);
+//		HAL_Delay(1000);
 		SWTest();
-		if(HAL_GetTick()-start_time>=1000){
-			HAL_GPIO_TogglePin(SENS_PWR_CTRL_GPIO_Port,SENS_PWR_CTRL_Pin);
-			start_time=HAL_GetTick();
-		}
+		#ifdef PONDGUARD
+			if(HAL_GetTick()-start_time>=1000){
+				HAL_GPIO_TogglePin(SENS_PWR_CTRL_GPIO_Port,SENS_PWR_CTRL_Pin);
+				start_time=HAL_GetTick();
+			}
+		#endif
 		
   }
   /* USER CODE END 3 */
@@ -356,7 +388,11 @@ static void MX_ADC1_Init(void)
   hadc1.Init.EOCSelection = ADC_EOC_SEQ_CONV;
   hadc1.Init.LowPowerAutoWait = DISABLE;
   hadc1.Init.ContinuousConvMode = ENABLE;
+	#ifdef PONDGUARD
   hadc1.Init.NbrOfConversion = 7;
+	#elif PONDMOTHER
+	hadc1.Init.NbrOfConversion = 4;
+	#endif
   hadc1.Init.DiscontinuousConvMode = DISABLE;
   hadc1.Init.NbrOfDiscConversion = 1;
   hadc1.Init.ExternalTrigConv = ADC_SOFTWARE_START;
@@ -373,7 +409,7 @@ static void MX_ADC1_Init(void)
     */
   sConfig.Channel = ADC_CHANNEL_3;
   sConfig.Rank = ADC_REGULAR_RANK_1;
-  sConfig.SamplingTime = ADC_SAMPLETIME_92CYCLES_5;
+  sConfig.SamplingTime = ADC_SAMPLETIME_247CYCLES_5;
   sConfig.SingleDiff = ADC_SINGLE_ENDED;
   sConfig.OffsetNumber = ADC_OFFSET_NONE;
   sConfig.Offset = 0;
@@ -399,7 +435,7 @@ static void MX_ADC1_Init(void)
   {
     _Error_Handler(__FILE__, __LINE__);
   }
-
+	#ifdef PONDGUARD
     /**Configure Regular Channel 
     */
   sConfig.Channel = ADC_CHANNEL_13;
@@ -426,16 +462,31 @@ static void MX_ADC1_Init(void)
   {
     _Error_Handler(__FILE__, __LINE__);
   }
-
+	#endif
     /**Configure Regular Channel 
     */
   sConfig.Channel = ADC_CHANNEL_16;
+	#ifdef PONDGUARD
   sConfig.Rank = ADC_REGULAR_RANK_7;
+	#elif PONDMOTHER
+	sConfig.Rank = ADC_REGULAR_RANK_4;
+	#endif
   if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
   {
     _Error_Handler(__FILE__, __LINE__);
   }
 	HAL_ADCEx_Calibration_Start(&hadc1,ADC_SINGLE_ENDED);
+	#ifdef PONDMOTHER
+	if (HAL_ADC_Start_DMA(&hadc1,(uint32_t *)ADCConvertedValue_DMA,ADC_NUM_OF_CHANNELS) != HAL_OK)
+	{
+		usartTx(CONSOLE_USART,(const char *)"Failed to start ADC");
+	}
+	#elif PONDGUARD
+	if (HAL_ADC_Start_DMA(&hadc1,(uint32_t*)adc_value,7) != HAL_OK)
+	{
+		usartTx(CONSOLE_USART,(const char *)"Failed to start ADC");
+	}
+	#endif
 
 }
 
@@ -702,32 +753,62 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOD_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOC, LCD_A0_Pin|SENS_PWR_CTRL_Pin|LCD_BACKLIGHT_Pin|MOTOR_F_Pin 
-                          |MOTOR_R_Pin|WATER_JET_EN_Pin|LORA_RST_Pin, GPIO_PIN_RESET);
-
+	#ifdef PONDGUARD
+	HAL_GPIO_WritePin(GPIOC, LCD_A0_Pin|SENS_PWR_CTRL_Pin|LCD_BACKLIGHT_Pin|MOTOR_F_Pin
+                        |MOTOR_R_Pin|WATER_JET_EN_Pin|LORA_RST_Pin, GPIO_PIN_RESET);
+	#elif PONDMOTHER
+  HAL_GPIO_WritePin(GPIOC, LCD_A0_Pin|LCD_BACKLIGHT_Pin|LORA_RST_Pin|MOTOR_DIR_Pin|MOTOR_EN_Pin
+	|DOS_MOTOR_IN1_Pin|DOS_MOTOR_IN2_Pin, GPIO_PIN_RESET);
+	#endif
+	
+	#ifdef PONDGUARD
+	HAL_GPIO_WritePin(GPIOB, BT_NRST_Pin, GPIO_PIN_RESET);
+	#endif
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, LCD_RESET_Pin|IND_SENSE_Pin|LORA_PWR_EN_Pin, GPIO_PIN_RESET);
+	#ifdef PONDGUARD
+	HAL_GPIO_WritePin(GPIOA, LCD_RESET_Pin|IND_SENSE_Pin|LORA_PWR_EN_Pin, GPIO_PIN_RESET);
+	#elif PONDMOTHER
+  HAL_GPIO_WritePin(GPIOA, LCD_RESET_Pin|DISP_MOTOR_EN_Pin|LS_PWR_EN_Pin, GPIO_PIN_RESET);
+	#endif
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(SPI_NSS_GPIO_Port, SPI_NSS_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, BT_NRST_Pin|GPS_RST_Pin|GPS_PWR_EN_Pin, GPIO_PIN_RESET);
+	#ifdef PONDGUARD
+	HAL_GPIO_WritePin(GPIOB, BT_NRST_Pin|GPS_RST_Pin|GPS_PWR_EN_Pin, GPIO_PIN_RESET);
+	#elif PONDMOTHER
+  HAL_GPIO_WritePin(GPIOB, GPS_RST_Pin|GPS_PWR_EN_Pin|LORA_PWR_EN_Pin|BT_PWR_EN_Pin
+	|DISP_MOTOR_EN_INT_Pin, GPIO_PIN_RESET);
+	#endif
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(SPI_Flash_CS_GPIO_Port, SPI_Flash_CS_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pins : LCD_A0_Pin SENS_PWR_CTRL_Pin LCD_BACKLIGHT_Pin MOTOR_F_Pin 
                            MOTOR_R_Pin WATER_JET_EN_Pin LORA_RST_Pin */
-  GPIO_InitStruct.Pin = LCD_A0_Pin|SENS_PWR_CTRL_Pin|LCD_BACKLIGHT_Pin|MOTOR_F_Pin 
-                          |MOTOR_R_Pin|WATER_JET_EN_Pin|LORA_RST_Pin;
+  GPIO_InitStruct.Pin = LCD_A0_Pin|LCD_BACKLIGHT_Pin|LORA_RST_Pin;
+	#ifdef PONDGUARD
+	GPIO_InitStruct.Pin |=	SENS_PWR_CTRL_Pin|MOTOR_F_Pin 
+                          |MOTOR_R_Pin|WATER_JET_EN_Pin;
+	#elif PONDMOTHER
+	GPIO_InitStruct.Pin |=	MOTOR_DIR_Pin|MOTOR_EN_Pin
+	|DOS_MOTOR_IN1_Pin|DOS_MOTOR_IN2_Pin;
+	#endif
+													
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
   /*Configure GPIO pins : LCD_RESET_Pin IND_SENSE_Pin LORA_PWR_EN_Pin */
-  GPIO_InitStruct.Pin = LCD_RESET_Pin|IND_SENSE_Pin|LORA_PWR_EN_Pin;
+  GPIO_InitStruct.Pin = LCD_RESET_Pin;
+	#ifdef PONDGUARD
+	GPIO_InitStruct.Pin |=LORA_PWR_EN_Pin|IND_SENSE_Pin;
+	#elif PONDMOTHER
+	GPIO_InitStruct.Pin |=DISP_MOTOR_EN_Pin|LS_PWR_EN_Pin;
+	#endif
+	
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -741,19 +822,35 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_Init(SPI_NSS_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pin : DTCT_SW_Pin */
+	#ifdef PONDGUARD
   GPIO_InitStruct.Pin = DTCT_SW_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(DTCT_SW_GPIO_Port, &GPIO_InitStruct);
+	#elif PONDMOTHER
+	GPIO_InitStruct.Pin = LOG_EN_Pin;
+	GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(LOG_EN_GPIO_Port, &GPIO_InitStruct);
+	#endif
 
   /*Configure GPIO pins : TRAIL_REQ_Pin M1_PUSH_DB_Pin M2_PUSH_DB_Pin M3_PUSH_DB_Pin */
-  GPIO_InitStruct.Pin = TRAIL_REQ_Pin|M1_PUSH_DB_Pin|M2_PUSH_DB_Pin|M3_PUSH_DB_Pin;
+  GPIO_InitStruct.Pin = M1_PUSH_DB_Pin|M2_PUSH_DB_Pin|M3_PUSH_DB_Pin;
+	#ifdef PONDGUARD
+	GPIO_InitStruct.Pin |= TRAIL_REQ_Pin;
+	#endif
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
   /*Configure GPIO pins : BT_NRST_Pin GPS_RST_Pin GPS_PWR_EN_Pin */
-  GPIO_InitStruct.Pin = BT_NRST_Pin|GPS_RST_Pin|GPS_PWR_EN_Pin;
+  GPIO_InitStruct.Pin = GPS_RST_Pin|GPS_PWR_EN_Pin;
+	#ifdef PONDGUARD
+	GPIO_InitStruct.Pin |= BT_NRST_Pin;
+	#elif PONDMOTHER
+	GPIO_InitStruct.Pin |= LORA_PWR_EN_Pin|BT_PWR_EN_Pin
+	|DISP_MOTOR_EN_INT_Pin;
+	#endif
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -809,7 +906,11 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
   if(GPIO_Pin==M1_PUSH_DB_Pin){
 		interupt_pin_press_count[0]++;
+		#ifdef PONDGUARD
 		lcd_click_status = TRAIL_RUN;//UP_CLICK_EVENT;
+		#elif PONDMOTHER
+		lcd_click_status = MENU_CLICK_EVENT;
+		#endif
 		LCDClickevent = 1;
 	}
 	else if(GPIO_Pin==M2_PUSH_DB_Pin){
@@ -827,17 +928,20 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 		lcd_click_status = DOWN_CLICK_EVENT;
 		LCDClickevent = 1;
 	}
+	#ifdef PONDGUARD
 	else if(GPIO_Pin==TRAIL_REQ_Pin){
 		interupt_pin_press_count[4]++;
 		lcd_click_status = MENU_CLICK_EVENT;
 		LCDClickevent = 1;
 	}
+	#endif
 	else{
 		LCDClickevent = 0;
 	}
 	
 }
 uint16_t max=0;
+#ifdef PONDGUARD
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc)
 {
 	//INA Vo=(Is*Rs*Rl)/5K
@@ -864,6 +968,7 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc)
 		
 	}
 }
+#endif
 /* USER CODE END 4 */
 
 /**

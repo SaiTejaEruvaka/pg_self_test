@@ -1,5 +1,6 @@
 pg_self_test\text_tiny.o: ..\Src\text_tiny.c
 pg_self_test\text_tiny.o: ../Inc/main.h
+pg_self_test\text_tiny.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 pg_self_test\text_tiny.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h
 pg_self_test\text_tiny.o: ../Inc/stm32l4xx_hal_conf.h
 pg_self_test\text_tiny.o: ../Inc/main.h
@@ -39,6 +40,12 @@ pg_self_test\text_tiny.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_spi.
 pg_self_test\text_tiny.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_spi_ex.h
 pg_self_test\text_tiny.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart.h
 pg_self_test\text_tiny.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart_ex.h
+pg_self_test\text_tiny.o: ../Inc/uart.h
+pg_self_test\text_tiny.o: ../Inc/LoRaTest.h
+pg_self_test\text_tiny.o: ../Inc/FlashTest.h
+pg_self_test\text_tiny.o: ../Inc/adc.h
+pg_self_test\text_tiny.o: ../Inc/PMTest.h
+pg_self_test\text_tiny.o: ../Inc/LCDTest.h
 pg_self_test\text_tiny.o: ../Inc/glcd.h
 pg_self_test\text_tiny.o: ../Inc/ST7565R.h
 pg_self_test\text_tiny.o: ../Inc/glcd_devices.h

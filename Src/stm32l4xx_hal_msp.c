@@ -101,7 +101,11 @@ void HAL_ADC_MspInit(ADC_HandleTypeDef* hadc)
     PB0     ------> ADC1_IN15
     PB1     ------> ADC1_IN16 
     */
+		#ifdef PONDGUARD
     GPIO_InitStruct.Pin = WP_LOAD_CURRENT_Pin|MOTOR_CURRENT_Pin|ADC_BAT_VOLTAGE_Pin|ADC_SOL_VOLTAGE_Pin;
+		#elif PONDMOTHER
+		GPIO_InitStruct.Pin = ACS_CURRENT_Pin|DOS_MOTOR_CURRENT_Pin;
+		#endif
     GPIO_InitStruct.Mode = GPIO_MODE_ANALOG_ADC_CONTROL;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
@@ -110,8 +114,12 @@ void HAL_ADC_MspInit(ADC_HandleTypeDef* hadc)
     GPIO_InitStruct.Mode = GPIO_MODE_ANALOG_ADC_CONTROL;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     HAL_GPIO_Init(VREF_D_GPIO_Port, &GPIO_InitStruct);
-
+		
+		#ifdef PONDGUARD
     GPIO_InitStruct.Pin = CHARGE_CURRENT_Pin|CTRL_LOAD_CURRENT_Pin;
+		#elif PONDMOTHER
+		GPIO_InitStruct.Pin = BATSENSE_ADC_Pin;
+		#endif
     GPIO_InitStruct.Mode = GPIO_MODE_ANALOG_ADC_CONTROL;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
@@ -161,12 +169,17 @@ void HAL_ADC_MspDeInit(ADC_HandleTypeDef* hadc)
     PB0     ------> ADC1_IN15
     PB1     ------> ADC1_IN16 
     */
+		#ifdef PONDGUARD
     HAL_GPIO_DeInit(GPIOC, WP_LOAD_CURRENT_Pin|MOTOR_CURRENT_Pin|ADC_BAT_VOLTAGE_Pin|ADC_SOL_VOLTAGE_Pin);
-
+		#elif PONDMOTHER
+		HAL_GPIO_DeInit(GPIOC,ACS_CURRENT_Pin|DOS_MOTOR_CURRENT_Pin);
+		#endif
     HAL_GPIO_DeInit(VREF_D_GPIO_Port, VREF_D_Pin);
-
+		#ifdef PONDGUARD
     HAL_GPIO_DeInit(GPIOB, CHARGE_CURRENT_Pin|CTRL_LOAD_CURRENT_Pin);
-
+		#elif PONDMOTHER
+		HAL_GPIO_DeInit(GPIOB,BATSENSE_ADC_Pin);
+		#endif
     /* ADC1 DMA DeInit */
     HAL_DMA_DeInit(hadc->DMA_Handle);
   /* USER CODE BEGIN ADC1_MspDeInit 1 */

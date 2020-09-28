@@ -156,6 +156,7 @@ typedef union DO_I2C_t
 		uint32_t timeout;
 		uint32_t lastTick;
 	}sSELF_CLEAN_t;
+#ifdef PONDGUARD
 typedef struct{
 	char CmndString[MAX_CMND_STRING_LEN];
 	char ResponseString[MAX_CMND_STRING_LEN];
@@ -177,7 +178,7 @@ typedef struct {
 	uint8_t ui8DataBuff[MAX_BLE_RX_BUFFER_SIZE];
 	uint16_t ui16ReadPtr;
 }sBLE_RX_BUFF_t;
-
+#endif
 extern void PGTest(void);
 extern self_test_PG_Cntrl_t PG_Cntrltest;
 extern sGPS_RX_BUFF_t sGPSrxBuff;

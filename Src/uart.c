@@ -9,6 +9,9 @@
 #ifdef PONDGUARD
 #include "PGTest.h"
 #include "LoRaTest.h"
+#elif PONDMOTHER
+#include "PMTest.h"
+#include "LoRaTest.h"
 #endif
 #define MAX_DEBUG_MSG_SIZE 100
 extern UART_HandleTypeDef hlpuart1;
@@ -20,6 +23,7 @@ extern uint8_t recv_buffer[100];
 
 extern char lora_uart_buff[LORA_BUF_SIZE];
 extern sBLE_RX_BUFF_t sBLErxBuff;
+extern sGPS_RX_BUFF_t sGPSrxBuff;
 signed int usartTx(USART_TypeDef *Usart, const char *pFormat, ...)
 {
     va_list ap;
@@ -61,14 +65,14 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 	{
 		HAL_UART_Receive_IT(&huart2, (uint8_t *)lora_uart_buff, LORA_BUF_SIZE);
 	}
-	#ifdef PONDGUARD
+//	#ifdef PONDGUARD
 	else if (huart == &hlpuart1) {
 		HAL_UART_Receive_IT(&hlpuart1,sGPSrxBuff.ui8DataBuff,MAX_GPS_RX_BUFFER_SIZE);	
 	}	
 	else if (huart == &huart3) {
 		HAL_UART_Receive_IT(&huart3,sBLErxBuff.ui8DataBuff,MAX_BLE_RX_BUFFER_SIZE);	
 	}
-	#endif
+//	#endif
 	else if(huart==&huart1){
 		HAL_UART_Receive_IT(&huart1,recv_buffer,sizeof(recv_buffer));
 	}
@@ -80,7 +84,7 @@ void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
     {    
 			usartTx(CONSOLE_USART,(const char *)"\r\n Error UART2");
     }
-		#ifdef PONDGUARD
+		//#ifdef PONDGUARD
 		else if (huart == &huart3) {
 			HAL_UART_Receive_IT(&huart3,sBLErxBuff.ui8DataBuff,MAX_BLE_RX_BUFFER_SIZE);
 			usartTx(CONSOLE_USART,(const char *)"\r\n Error UART3");
@@ -91,9 +95,9 @@ void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
 			usartTx(CONSOLE_USART,(const char *)"\r\n Error hlpuart1");
     }
 		else if(huart==&huart1){
-			usartTx(CONSOLE_USART,(const char *)"\r\n Error UART1");
+//			usartTx(CONSOLE_USART,(const char *)"\r\n Error UART1");
 			HAL_UART_Receive_IT(&huart1,recv_buffer,sizeof(recv_buffer));
 		}
-		#endif
+		//#endif
 }
 	

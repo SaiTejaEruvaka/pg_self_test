@@ -32,7 +32,7 @@
   ******************************************************************************
   */
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifdef PONDGUARD
+//#ifdef PONDGUARD
 #ifndef __rtc_H
 #define __rtc_H
 #ifdef __cplusplus
@@ -68,7 +68,7 @@ void MX_RTC_Init(void);
 #ifdef __cplusplus
 }
 #endif
-#endif /*__ rtc_H */
+//#endif /*__ rtc_H */
 
 /**
   * @}
