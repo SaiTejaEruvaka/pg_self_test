@@ -127,6 +127,12 @@ void LoRaTest(void)
 {
 	#ifdef MODULE_LORA_MCHIP
 		MChip_LoRaTest();
+	#if 0
+		memset(lora_uart_buff,0,100);
+	    HAL_GPIO_WritePin(LORA_RST_GPIO_Port, LORA_RST_Pin, GPIO_PIN_RESET);
+    HAL_Delay(500);
+    HAL_GPIO_WritePin(LORA_RST_GPIO_Port, LORA_RST_Pin, GPIO_PIN_SET);
+	#endif
 	#else
 		HopeRF_LoRaTest();
 	#endif

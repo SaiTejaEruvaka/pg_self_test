@@ -170,11 +170,15 @@ int main(void)
   MX_ADC1_Init();
   MX_LPUART1_UART_Init();
   /* USER CODE BEGIN 2 */
-  	usartTx(CONSOLE_USART,(const char *)"Completed Initialization.......\r\n");
+//	HAL_GPIO_WritePin(LCD_RESET_GPIO_Port,LCD_RESET_Pin,GPIO_PIN_RESET);
+//	HAL_Delay(5000);
+//	HAL_GPIO_WritePin(LCD_RESET_GPIO_Port,LCD_RESET_Pin,GPIO_PIN_SET);
+  usartTx(CONSOLE_USART,(const char *)"Completed Initialization.......\r\n");
 	usartTx(CONSOLE_USART,(const char *)"Enter 'start' to proceed\r\n");
 	HAL_UART_Receive_IT(&huart1,recv_buffer,sizeof(recv_buffer));
-//	while(strstr((const char *)recv_buffer,(const char *)"start")==NULL);
+	while(strstr((const char *)recv_buffer,(const char *)"start")==NULL);
 
+	HAL_NVIC_DisableIRQ(USART1_IRQn);
 	HAL_Delay(100);
 	usartTx(CONSOLE_USART,(const char *)"Self Testing started.......\r\n");
 	
@@ -220,6 +224,7 @@ int main(void)
 //	HAL_ADC_Start_DMA(&hadc1,(uint32_t*)adc_value,4);
 //	HAL_GPIO_WritePin(SENS_PWR_CTRL_GPIO_Port,SENS_PWR_CTRL_Pin,GPIO_PIN_SET);
 	HAL_GPIO_WritePin(LCD_BACKLIGHT_GPIO_Port,LCD_BACKLIGHT_Pin,GPIO_PIN_SET);
+//	HAL_GPIO_WritePin(LCD_RESET_GPIO_Port,LCD_RESET_Pin,GPIO_PIN_RESET);
 //	HAL_UART_DeInit(&huart3);
 //	i2cStatus = I2C_MCP3021_Access(MCP3021_I2C_ADDRESS,&i32Encoder_Value);
 //	ret=HAL_I2C_Master_Receive(&hi2c1,0xAA,i2c_data,sizeof(i2c_data),5000);
@@ -242,15 +247,29 @@ int main(void)
 ////	FlashTest();
 ////	LCDTest();
 ////	LoRaTest();
+	HAL_GPIO_WritePin(GPIOC,GPIO_PIN_13,GPIO_PIN_RESET);
+	HAL_Delay(10);
+	HAL_GPIO_WritePin(GPIOC,GPIO_PIN_13,GPIO_PIN_SET);
+	HAL_Delay(10);
+//	HAL_GPIO_WritePin(LCD_RESET_GPIO_Port,LCD_RESET_Pin,GPIO_PIN_RESET);
+//	HAL_Delay(10);
+//	HAL_GPIO_WritePin(LCD_RESET_GPIO_Port,LCD_RESET_Pin,GPIO_PIN_SET);
+//	HAL_Delay(10);
+//	HAL_GPIO_WritePin(SPI_NSS_GPIO_Port,SPI_NSS_Pin,GPIO_PIN_RESET);
+//	HAL_Delay(10);
+//	HAL_GPIO_WritePin(SPI_NSS_GPIO_Port,SPI_NSS_Pin,GPIO_PIN_SET);
+//	HAL_Delay(10);
 	#ifdef PONDGUARD
 	PGTest();
 	#elif PONDMOTHER
 	FlashTest();
+	HAL_GPIO_WritePin(SPI_Flash_CS_GPIO_Port, SPI_Flash_CS_Pin, GPIO_PIN_SET);
 	LCDTest();
 	LoRaTest();
 	ADCTest();
 	
 	PMTest();
+//	vGPS_Init();
 	#endif
 
 
@@ -797,7 +816,7 @@ static void MX_GPIO_Init(void)
 	#endif
 													
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
@@ -915,12 +934,20 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 	}
 	else if(GPIO_Pin==M2_PUSH_DB_Pin){
 		interupt_pin_press_count[1]++;
+		#ifdef PONDGUARD
 		lcd_click_status = BACK_CLICK_EVENT;//DOWN_CLICK_EVENT;
+		#elif PONDMOTHER
+		lcd_click_status = UP_CLICK_EVENT;
+		#endif
 		LCDClickevent = 1;
 	}
 	else if(GPIO_Pin==M3_PUSH_DB_Pin){
 		interupt_pin_press_count[2]++;
-		lcd_click_status = UP_CLICK_EVENT;//MENU_CLICK_EVENT;
+		#ifdef PONDGUARD
+		lcd_click_status = UP_CLICK_EVENT;//DOWN_CLICK_EVENT;
+		#elif PONDMOTHER
+		lcd_click_status = BACK_CLICK_EVENT;
+		#endif
 		LCDClickevent = 1;
 	}
 	else if(GPIO_Pin==M4_PUSH_DB_Pin){

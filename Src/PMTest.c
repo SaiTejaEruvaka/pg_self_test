@@ -388,6 +388,7 @@ void Level_Sensor_Check(){
 //		usartTx(CONSOLE_USART,(const char *)"\r\nlevel sensor check fail\r\n");
 //	}
 //	else{
+		HAL_NVIC_EnableIRQ(USART1_IRQn);
 		HAL_UART_Receive_IT(&huart1,recv_buffer,sizeof(recv_buffer));
 		usartTx(CONSOLE_USART,(const char *)"level");
 		if(strstr((const char *)recv_buffer,"level")){
@@ -441,29 +442,29 @@ void PMTest(void)
 	#ifndef PM_V16_1	
 	Log_enable_pin_status();
 	#else
-	usartTx(CONSOLE_USART,(const char *)"Connect external relay board and send 1 \r\n");
-	external_relay_time_millis = HAL_GetTick();
-	HAL_GPIO_WritePin(EXTERNAL_RELAY_PORT,EXTERNAL_MOTOR_ENABLE_PIN,GPIO_PIN_RESET);
-	HAL_GPIO_WritePin(EXTERNAL_RELAY_PORT,EXTERNAL_MOTOR_DIRECTION_PIN,GPIO_PIN_RESET);
-	while(HAL_GetTick() - external_relay_time_millis <=  EXTERNAL_RELAY_TIMEOUT_SECS * MILLIS_PER_SEC)
-	{
-		HAL_UART_Receive_IT(&huart1,&recv_data_ui8,1);
-		if(recv_data_ui8 == 0x01)
-		{
-			HAL_GPIO_WritePin(EXTERNAL_RELAY_PORT,EXTERNAL_MOTOR_ENABLE_PIN,GPIO_PIN_SET);
-	    HAL_GPIO_WritePin(EXTERNAL_RELAY_PORT,EXTERNAL_MOTOR_DIRECTION_PIN,GPIO_PIN_SET);
-	    Cal_exti_doser_curr();
-			Cal_exti_disp_curr();
-		}
-	}
-	if(HAL_GPIO_ReadPin(EXTERNAL_RELAY_PORT,EXTERNAL_MOTOR_ENABLE_PIN) && HAL_GPIO_ReadPin(EXTERNAL_RELAY_PORT,EXTERNAL_MOTOR_DIRECTION_PIN))
-	{
-		;
-	}
-	else
-	{
-		usartTx(CONSOLE_USART,(const char *)"EXTERNAL RELAY BOARD MEASUREMENTS INCOMPLETE.......\r\n");
-	}
+//	usartTx(CONSOLE_USART,(const char *)"Connect external relay board and send 1 \r\n");
+//	external_relay_time_millis = HAL_GetTick();
+//	HAL_GPIO_WritePin(EXTERNAL_RELAY_PORT,EXTERNAL_MOTOR_ENABLE_PIN,GPIO_PIN_RESET);
+//	HAL_GPIO_WritePin(EXTERNAL_RELAY_PORT,EXTERNAL_MOTOR_DIRECTION_PIN,GPIO_PIN_RESET);
+//	while(HAL_GetTick() - external_relay_time_millis <=  EXTERNAL_RELAY_TIMEOUT_SECS * MILLIS_PER_SEC)
+//	{
+//		HAL_UART_Receive_IT(&huart1,&recv_data_ui8,1);
+//		if(recv_data_ui8 == 0x01)
+//		{
+//			HAL_GPIO_WritePin(EXTERNAL_RELAY_PORT,EXTERNAL_MOTOR_ENABLE_PIN,GPIO_PIN_SET);
+//	    HAL_GPIO_WritePin(EXTERNAL_RELAY_PORT,EXTERNAL_MOTOR_DIRECTION_PIN,GPIO_PIN_SET);
+//	    Cal_exti_doser_curr();
+//			Cal_exti_disp_curr();
+//		}
+//	}
+//	if(HAL_GPIO_ReadPin(EXTERNAL_RELAY_PORT,EXTERNAL_MOTOR_ENABLE_PIN) && HAL_GPIO_ReadPin(EXTERNAL_RELAY_PORT,EXTERNAL_MOTOR_DIRECTION_PIN))
+//	{
+//		;
+//	}
+//	else
+//	{
+//		usartTx(CONSOLE_USART,(const char *)"EXTERNAL RELAY BOARD MEASUREMENTS INCOMPLETE.......\r\n");
+//	}
 	RTC_Chck();
 	#endif
 	#endif

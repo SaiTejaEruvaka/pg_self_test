@@ -637,10 +637,10 @@ Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M4.fp --apcs=int
 erwork --depend=pg_self_test\startup_stm32l431xx.d -opg_self_test\startup_stm32
 l431xx.o -I.\RTE\_pm_self_test -IC:\Users\Eruvaka\AppData\Local\Arm\Packs\ARM\C
 MSIS\5.7.0\CMSIS\Core\Include -IC:\Users\Eruvaka\AppData\Local\Arm\Packs\Keil\S
-TM32L4xx_DFP\2.4.0\Drivers\CMSIS\Device\ST\STM32L4xx\Include --predefine="__EVA
-L SETA 1" --predefine="__MICROLIB SETA 1" --predefine="__UVISION_VERSION SETA 5
-25" --predefine="_RTE_ SETA 1" --predefine="STM32L431xx SETA 1" --list=startup_
-stm32l431xx.lst startup_stm32l431xx.s
+TM32L4xx_DFP\2.4.0\Drivers\CMSIS\Device\ST\STM32L4xx\Include --predefine="__MIC
+ROLIB SETA 1" --predefine="__UVISION_VERSION SETA 525" --predefine="_RTE_ SETA 
+1" --predefine="STM32L431xx SETA 1" --list=startup_stm32l431xx.lst startup_stm3
+2l431xx.s
 
 
 
@@ -1554,4 +1554,4 @@ Symbol: __main
       At line 190 in file startup_stm32l431xx.s
 Comment: __main used once
 2 symbols
-429 symbols in table
+428 symbols in table

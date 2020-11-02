@@ -40,7 +40,6 @@ void glcd_Scroll_write(uint8_t page)
 //	glcd_reset_bbox();
 }
 #endif
-
 void glcd_spi_write(uint8_t c)
 {
     PLATFORM_spi1_write(&c, 1);
